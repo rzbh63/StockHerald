@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>[[${appName}]]</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://fonts.googleapis.com/css?family=Quicksand:300,400,500,700,900" rel="stylesheet">
+    <link rel="stylesheet" href="fonts/icomoon/style.css">
+
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/magnific-popup.css">
+    <link rel="stylesheet" href="css/jquery-ui.css">
+    <link rel="stylesheet" href="css/owl.carousel.min.css">
+    <link rel="stylesheet" href="css/owl.theme.default.min.css">
+
+    <link rel="stylesheet" href="css/bootstrap-datepicker.css">
+
+    <link rel="stylesheet" href="fonts/flaticon/font/flaticon.css">
+
+    <link rel="stylesheet" href="css/aos.css">
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+  	
+  	<script src="js/jquery-3.3.1.min.js"></script>
+  	<script src="js/chart-master/Chart.js"></script>
+  </head>
+  <style>
+  	.table-logo {
+  		width: 50px;
+  		height: 50px;
+  	}
+  </style>
+  <body>
+  
+  <div class="site-wrap">
+
+    <div class="site-mobile-menu">
+      <div class="site-mobile-menu-header">
+        <div class="site-mobile-menu-close mt-3">
+          <span class="icon-close2 js-menu-toggle"></span>
+        </div>
+      </div>
+      <div class="site-mobile-menu-body"></div>
+    </div>
+   
+    <header class="site-navbar py-4 bg-white" role="banner">
+
+      <div class="container">
+        <div class="row align-items-center">
+          
+          <div class="col-11 col-xl-2">
+            <h1 class="mb-0 site-logo"><a href="index.html" class="text-black h2 mb-0">[[${appName}]]</a></h1>
+          </div>
+          <div class="col-12 col-md-10 d-none d-xl-block">
+            <nav class="site-navigation position-relative text-right" role="navigation">
+
+              <ul class="site-menu js-clone-nav mr-auto d-none d-lg-block">
+                <li><a href="index">Home</a></li>
+                <li class="active"><a href="stock">Stocks</a></li>
+                <li class="has-children">
+                  <a href="services.html">Services</a>
+                  <ul class="dropdown">
+                    <li><a href="services.html">Web Applications</a></li>
+                    <li><a href="services.html">WordPress Dev</a></li>
+                    <li><a href="services.html">Mobile Applications</a></li>
+                    <li><a href="services.html">eCommerce</a></li>
+                  </ul>
+                </li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="blog.html">Blog</a></li>
+                <li><a href="contact.html">Contact</a></li>
+              </ul>
+            </nav>
+          </div>
+
+
+          <div class="d-inline-block d-xl-none ml-md-0 mr-auto py-3" style="position: relative; top: 3px;"><a href="#" class="site-menu-toggle js-menu-toggle text-black"><span class="icon-menu h3"></span></a></div>
+
+          </div>
+
+        </div>
+      </div>
+      
+    </header>
+
+  
+
+    <div class="site-blocks-cover inner-page-cover overlay" style="background-image: url(images/hero_1.jpg);" data-aos="fade" data-stellar-background-ratio="0.5">
+      <div class="container">
+        <div class="row align-items-center justify-content-center text-center">
+
+          <div class="col-md-12 mt-5" data-aos="fade-up" data-aos-delay="400">
+                        
+            <div class="row justify-content-center mb-4">
+              <div class="col-md-8 text-center">
+                <h1>Nasdaq Stocks</h1>
+                <p class="lead mb-5">Get Some Predictions</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>  
+
+
+    
+    <section class="site-section" style="padding: 2em 0">
+    
+		<div class="container">
+			<div class="row mb-5">
+			  <div class="col-xl-6 mb-5 mb-xl-0">
+			    <div class="card shadow">
+			      <div class="card-header border-0">
+			        <div class="row align-items-center">
+			          <div class="col-9">
+			            <h3 class="mb-0 text-center">Nasdaq Market Overview</h3>
+			          </div>
+			          <div class="col-3 text-right">
+			            <a href="#!" class="btn btn-sm btn-primary">See all</a>
+			          </div>
+			        </div>
+			      </div>
+			      <div class="table-responsive">
+			        <!-- Projects table -->
+			      <table class="table align-items-center text-center table-flush mb-0">
+			        <thead class="thead-light">
+			          <tr>
+			            <th scope="col">Index</th>
+			            <th scope="col">Value</th>
+			            <th scope="col">Change</th>
+			            <th scope="col">Net</th>
+			          </tr>
+			        </thead>
+			        <tbody>
+			          <tr>
+			            <th scope="row">NASDAQ</th>
+			            <td>4,569</td>
+			            <td>
+			              58.3 <i class="fas fa-arrow-up text-success mr-3"></i>
+			            </td>
+			            <td>0.78%</td>
+			          </tr>
+			          <tr>
+			            <th scope="row">NASDAQ-100 (NDX)</th>
+			            <td>3,985</td>
+			            <td>
+			              42.25 <i class="fas fa-arrow-down text-warning mr-3"></i>
+			            </td>
+			            <td>0.78%</td>
+			          </tr>
+			          <tr>
+			            <th scope="row">Pre-Market (NDX)</th>
+			            <td>3,513</td>
+			            <td>
+			              61.77 <i class="fas fa-arrow-down text-danger mr-3"></i>
+			            </td>
+			            <td>0.78%</td>
+			          </tr>
+			          <tr>
+			            <th scope="row">After Hours (NDX)</th>
+			            <td>2,050</td>
+			            <td>
+			            	3.51 <i class="fas fa-arrow-up text-success mr-3"></i>
+			            </td>
+			            <td>0.78%</td>
+			          </tr>
+			        </tbody>
+			      </table>
+			    </div>
+			  </div>
+			</div>
+			
+			<div class="col-xl-6 mb-5 mb-xl-0">
+			    <div class="card shadow">
+			      <div class="card-header border-0">
+			        <div class="row align-items-center">
+			          <div class="col">
+			            <h3 class="text-center mb-0">Nasdaq Composite</h3>
+			          </div>
+			        </div>
+			      </div>
+			      <div id="chart3Container" class="panel-body text-center">
+	              	<canvas id="chart3" width="300" height="134" ></canvas>
+	              	<script>
+					var ctx = document.getElementById('chart3');
+					var myChart = new Chart(ctx, {
+					    type: 'line',
+					    data: {
+					        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+					        datasets: [{
+					            label: '# of Votes',
+					            data: [12, 19, 3, 5, 2, 3],
+					            backgroundColor: [
+					                'rgba(54, 162, 235, 0.2)'
+					            ],
+					            borderColor: [
+					                'rgba(54, 162, 235, 1)'
+					            ],
+					            borderWidth: 1
+					        }]
+					    },
+					    options: {
+					        scales: {
+					            yAxes: [{
+					                ticks: {
+					                    beginAtZero: true
+					                }
+					            }]
+					        },
+					        //responsive: false
+					    }
+					});
+					</script>
+	        	  </div>
+			   </div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="container">
+	    <div class="row">
+	        <div class="col">
+	          <div class="card shadow">
+	            <div class="card-header border-0">
+	              <h3 class="mb-0 text-center">Selected Stocks</h3>
+	            </div>
+	            <div class="table-responsive">
+	              <table class="table align-items-center text-center table-flush mb-0">
+	                <thead class="thead-light">
+	                  <tr>
+	                    <th scope="col">Company</th>
+	                    <th scope="col">Value</th>
+	                    <th scope="col">Change</th>
+	                    <th scope="col">Net</th>
+	                    <th scope="col"></th>
+	                  </tr>
+	                </thead>
+	                <tbody>
+	                  <tr>
+	                    <th scope="row">
+	                      <div class="media align-items-center">
+	                        <a href="#" class="avatar rounded-circle mr-3">
+	                          <img class="table-logo" alt="Image placeholder" src="../images/company_logo/apple.png">
+	                        </a>
+	                        <div class="media-body">
+	                          <span class="mb-0 text-sm">Apple Inc. Common Stock (AAPL) Quote & Summary Data</span>
+	                        </div>
+	                      </div>
+	                    </th>
+	                    <td>
+	                    	<div class="align-items-center">
+	                    		<span>$189.95</span>
+	                    	</div>
+	                    </td>
+	                    <td>
+	                      <span class="badge badge-dot mr-4">
+	                        <i class="bg-warning"></i> pending
+	                      </span>
+	                    </td>
+	                    <td>
+	                      <div class="d-flex align-items-center">
+	                        <span class="mr-2">60%</span>
+	                        <div>
+	                          <div class="progress">
+	                            <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;"></div>
+	                          </div>
+	                        </div>
+	                      </div>
+	                    </td>
+	                    <td class="text-right">
+	                      <div class="dropdown">
+	                        <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+	                          <i class="fas fa-ellipsis-v"></i>
+	                        </a>
+	                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+	                          <a class="dropdown-item" href="#">Action</a>
+	                          <a class="dropdown-item" href="#">Another action</a>
+	                          <a class="dropdown-item" href="#">Something else here</a>
+	                        </div>
+	                      </div>
+	                    </td>
+	                  </tr>
+	                  <tr>
+	                    <th scope="row">
+	                      <div class="media align-items-center">
+	                        <a href="#" class="avatar rounded-circle mr-3">
+	                          <img class="table-logo" alt="Image placeholder" src="../images/company_logo/facebook.png">
+	                        </a>
+	                        <div class="media-body">
+	                          <span class="mb-0 text-sm">Angular Now UI Kit PRO</span>
+	                        </div>
+	                      </div>
+	                    </th>
+	                    <td>
+	                      $1,800 USD
+	                    </td>
+	                    <td>
+	                      <span class="badge badge-dot">
+	                        <i class="bg-success"></i> completed
+	                      </span>
+	                    </td>
+	                    <td>
+	                      <div class="d-flex align-items-center">
+	                        <span class="mr-2">100%</span>
+	                        <div>
+	                          <div class="progress">
+	                            <div class="progress-bar bg-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
+	                          </div>
+	                        </div>
+	                      </div>
+	                    </td>
+	                    <td class="text-right">
+	                      <div class="dropdown">
+	                        <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+	                          <i class="fas fa-ellipsis-v"></i>
+	                        </a>
+	                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+	                          <a class="dropdown-item" href="#">Action</a>
+	                          <a class="dropdown-item" href="#">Another action</a>
+	                          <a class="dropdown-item" href="#">Something else here</a>
+	                        </div>
+	                      </div>
+	                    </td>
+	                  </tr>
+	                  <tr>
+	                    <th scope="row">
+	                      <div class="media align-items-center">
+	                        <a href="#" class="avatar rounded-circle mr-3">
+	                          <img class="table-logo" alt="Image placeholder" src="../images/company_logo/google.png">
+	                        </a>
+	                        <div class="media-body">
+	                          <span class="mb-0 text-sm">React Material Dashboard</span>
+	                        </div>
+	                      </div>
+	                    </th>
+	                    <td>
+	                      $4,400 USD
+	                    </td>
+	                    <td>
+	                      <span class="badge badge-dot">
+	                        <i class="bg-info"></i> on schedule
+	                      </span>
+	                    </td>
+	                    <td>
+	                      <div class="d-flex align-items-center">
+	                        <span class="mr-2">90%</span>
+	                        <div>
+	                          <div class="progress">
+	                            <div class="progress-bar bg-info" role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100" style="width: 90%;"></div>
+	                          </div>
+	                        </div>
+	                      </div>
+	                    </td>
+	                    <td class="text-right">
+	                      <div class="dropdown">
+	                        <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+	                          <i class="fas fa-ellipsis-v"></i>
+	                        </a>
+	                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+	                          <a class="dropdown-item" href="#">Action</a>
+	                          <a class="dropdown-item" href="#">Another action</a>
+	                          <a class="dropdown-item" href="#">Something else here</a>
+	                        </div>
+	                      </div>
+	                    </td>
+	                  </tr>
+	                </tbody>
+	              </table>
+	            </div>
+	            <div class="card-footer py-4">
+	              <nav aria-label="...">
+	                <ul class="pagination justify-content-end mb-0">
+	                  <li class="page-item disabled">
+	                    <a class="page-link" href="#" tabindex="-1">
+	                      <i class="fas fa-angle-left"></i>
+	                      <span class="sr-only">Previous</span>
+	                    </a>
+	                  </li>
+	                  <li class="page-item active">
+	                    <a class="page-link" href="#">1</a>
+	                  </li>
+	                  <li class="page-item">
+	                    <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
+	                  </li>
+	                  <li class="page-item"><a class="page-link" href="#">3</a></li>
+	                  <li class="page-item">
+	                    <a class="page-link" href="#">
+	                      <i class="fas fa-angle-right"></i>
+	                      <span class="sr-only">Next</span>
+	                    </a>
+	                  </li>
+	                </ul>
+	              </nav>
+	            </div>
+	          </div>
+	        </div>
+	      </div>
+	  </div>
+      
+      <div class="container mt-5">
+        <div class="row">
+          <div class="col-md-6 col-lg-4 mb-4">
+            <a href="#" class="media-1">
+              <img src="images/img_1.jpg" alt="Image" class="img-fluid">
+              <div class="media-1-content">
+                <h2>Project Name 1</h2>
+                <span class="category">Web Application</span>
+              </div>
+            </a>
+          </div>
+          <div class="col-md-6 col-lg-4 mb-4">
+            <a href="#" class="media-1">
+              <img src="images/img_2.jpg" alt="Image" class="img-fluid">
+              <div class="media-1-content">
+                <h2>Project Name 2</h2>
+                <span class="category">Branding</span>
+              </div>
+            </a>
+          </div>
+          <div class="col-md-6 col-lg-4 mb-4">
+            <a href="#" class="media-1">
+              <img src="images/img_3.jpg" alt="Image" class="img-fluid">
+              <div class="media-1-content">
+                <h2>Project Name 3</h2>
+                <span class="category">Website</span>
+              </div>
+            </a>
+          </div>
+
+          <div class="col-md-6 col-lg-4 mb-4">
+            <a href="#" class="media-1">
+              <img src="images/img_4.jpg" alt="Image" class="img-fluid">
+              <div class="media-1-content">
+                <h2>Project Name 4</h2>
+                <span class="category">Web Application</span>
+              </div>
+            </a>
+          </div>
+          <div class="col-md-6 col-lg-4 mb-4">
+            <a href="#" class="media-1">
+              <img src="images/img_5.jpg" alt="Image" class="img-fluid">
+              <div class="media-1-content">
+                <h2>Project Name 5</h2>
+                <span class="category">Branding</span>
+              </div>
+            </a>
+          </div>
+          <div class="col-md-6 col-lg-4 mb-4">
+            <a href="#" class="media-1">
+              <img src="images/img_6.jpg" alt="Image" class="img-fluid">
+              <div class="media-1-content">
+                <h2>Project Name 6</h2>
+                <span class="category">Website</span>
+              </div>
+            </a>
+          </div>
+
+          <div class="col-md-6 col-lg-4 mb-4">
+            <a href="#" class="media-1">
+              <img src="images/img_1.jpg" alt="Image" class="img-fluid">
+              <div class="media-1-content">
+                <h2>Project Name 1</h2>
+                <span class="category">Web Application</span>
+              </div>
+            </a>
+          </div>
+          <div class="col-md-6 col-lg-4 mb-4">
+            <a href="#" class="media-1">
+              <img src="images/img_2.jpg" alt="Image" class="img-fluid">
+              <div class="media-1-content">
+                <h2>Project Name 2</h2>
+                <span class="category">Branding</span>
+              </div>
+            </a>
+          </div>
+          <div class="col-md-6 col-lg-4 mb-4">
+            <a href="#" class="media-1">
+              <img src="images/img_3.jpg" alt="Image" class="img-fluid">
+              <div class="media-1-content">
+                <h2>Project Name 3</h2>
+                <span class="category">Website</span>
+              </div>
+            </a>
+          </div>
+
+          <div class="col-md-6 col-lg-4 mb-4">
+            <a href="#" class="media-1">
+              <img src="images/img_4.jpg" alt="Image" class="img-fluid">
+              <div class="media-1-content">
+                <h2>Project Name 4</h2>
+                <span class="category">Web Application</span>
+              </div>
+            </a>
+          </div>
+          <div class="col-md-6 col-lg-4 mb-4">
+            <a href="#" class="media-1">
+              <img src="images/img_5.jpg" alt="Image" class="img-fluid">
+              <div class="media-1-content">
+                <h2>Project Name 5</h2>
+                <span class="category">Branding</span>
+              </div>
+            </a>
+          </div>
+          <div class="col-md-6 col-lg-4 mb-4">
+            <a href="#" class="media-1">
+              <img src="images/img_6.jpg" alt="Image" class="img-fluid">
+              <div class="media-1-content">
+                <h2>Project Name 6</h2>
+                <span class="category">Website</span>
+              </div>
+            </a>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+
+    <section class="site-section testimonial-wrap">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-8 text-center">
+            <h2 class="text-black h1 site-section-heading text-center">Testimonials</h2>
+          </div>
+        </div>
+      </div>
+      <div class="slide-one-item home-slider owl-carousel">
+          <div>
+            <div class="testimonial">
+              
+              <blockquote class="mb-5">
+                <p>&ldquo;Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur unde reprehenderit aperiam quaerat fugiat repudiandae explicabo animi minima fuga beatae illum eligendi incidunt consequatur. Amet dolores excepturi earum unde iusto.&rdquo;</p>
+              </blockquote>
+
+              <figure class="mb-4 d-flex align-items-center justify-content-center">
+                <div><img src="images/person_3.jpg" alt="Image" class="w-50 img-fluid mb-3"></div>
+                <p>John Smith</p>
+              </figure>
+            </div>
+          </div>
+          <div>
+            <div class="testimonial">
+
+              <blockquote class="mb-5">
+                <p>&ldquo;Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur unde reprehenderit aperiam quaerat fugiat repudiandae explicabo animi minima fuga beatae illum eligendi incidunt consequatur. Amet dolores excepturi earum unde iusto.&rdquo;</p>
+              </blockquote>
+              <figure class="mb-4 d-flex align-items-center justify-content-center">
+                <div><img src="images/person_2.jpg" alt="Image" class="w-50 img-fluid mb-3"></div>
+                <p>Christine Aguilar</p>
+              </figure>
+              
+            </div>
+          </div>
+
+          <div>
+            <div class="testimonial">
+
+              <blockquote class="mb-5">
+                <p>&ldquo;Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur unde reprehenderit aperiam quaerat fugiat repudiandae explicabo animi minima fuga beatae illum eligendi incidunt consequatur. Amet dolores excepturi earum unde iusto.&rdquo;</p>
+              </blockquote>
+              <figure class="mb-4 d-flex align-items-center justify-content-center">
+                <div><img src="images/person_4.jpg" alt="Image" class="w-50 img-fluid mb-3"></div>
+                <p>Robert Spears</p>
+              </figure>
+
+              
+            </div>
+          </div>
+
+          <div>
+            <div class="testimonial">
+
+              <blockquote class="mb-5">
+                <p>&ldquo;Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur unde reprehenderit aperiam quaerat fugiat repudiandae explicabo animi minima fuga beatae illum eligendi incidunt consequatur. Amet dolores excepturi earum unde iusto.&rdquo;</p>
+              </blockquote>
+              <figure class="mb-4 d-flex align-items-center justify-content-center">
+                <div><img src="images/person_5.jpg" alt="Image" class="w-50 img-fluid mb-3"></div>
+                <p>Bruce Rogers</p>
+              </figure>
+
+            </div>
+          </div>
+
+        </div>
+    </section>
+    
+    
+    <footer class="site-footer">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-9">
+            <div class="row">
+              <div class="col-md-3">
+                <h2 class="footer-heading mb-4">Quick Links</h2>
+                <ul class="list-unstyled">
+                  <li><a href="#">About Us</a></li>
+                  <li><a href="#">Services</a></li>
+                  <li><a href="#">Testimonials</a></li>
+                  <li><a href="#">Contact Us</a></li>
+                </ul>
+              </div>
+              <div class="col-md-3">
+                <h2 class="footer-heading mb-4">Products</h2>
+                <ul class="list-unstyled">
+                  <li><a href="#">About Us</a></li>
+                  <li><a href="#">Services</a></li>
+                  <li><a href="#">Testimonials</a></li>
+                  <li><a href="#">Contact Us</a></li>
+                </ul>
+              </div>
+              <div class="col-md-3">
+                <h2 class="footer-heading mb-4">Features</h2>
+                <ul class="list-unstyled">
+                  <li><a href="#">About Us</a></li>
+                  <li><a href="#">Services</a></li>
+                  <li><a href="#">Testimonials</a></li>
+                  <li><a href="#">Contact Us</a></li>
+                </ul>
+              </div>
+              <div class="col-md-3">
+                <h2 class="footer-heading mb-4">Follow Us</h2>
+                <a href="#" class="pl-0 pr-3"><span class="icon-facebook"></span></a>
+                <a href="#" class="pl-3 pr-3"><span class="icon-twitter"></span></a>
+                <a href="#" class="pl-3 pr-3"><span class="icon-instagram"></span></a>
+                <a href="#" class="pl-3 pr-3"><span class="icon-linkedin"></span></a>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <h2 class="footer-heading mb-4">Subscribe Newsletter</h2>
+            <form action="#" method="post">
+              <div class="input-group mb-3">
+                <input type="text" class="form-control border-secondary text-white bg-transparent" placeholder="Enter Email" aria-label="Enter Email" aria-describedby="button-addon2">
+                <div class="input-group-append">
+                  <button class="btn btn-primary text-white" type="button" id="button-addon2">Send</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="row pt-5 mt-5 text-center">
+          <div class="col-md-12">
+            <div class="border-top pt-5">
+            <p>
+            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+            Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="icon-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank" >Colorlib</a>
+            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+            </p>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script src="js/jquery-migrate-3.0.1.min.js"></script>
+  <script src="js/jquery-ui.js"></script>
+  <script src="js/popper.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/owl.carousel.min.js"></script>
+  <script src="js/jquery.stellar.min.js"></script>
+  <script src="js/jquery.countdown.min.js"></script>
+  <script src="js/jquery.magnific-popup.min.js"></script>
+  <script src="js/bootstrap-datepicker.min.js"></script>
+  <script src="js/aos.js"></script>
+
+  <script src="js/main.js"></script>
+    
+  </body>
+</html>
