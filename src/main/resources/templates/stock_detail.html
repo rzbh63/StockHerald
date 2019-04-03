@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>[[${appName}]]</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://fonts.googleapis.com/css?family=Quicksand:300,400,500,700,900" rel="stylesheet">
+    <link rel="stylesheet" href="fonts/icomoon/style.css">
+
+    <link rel="stylesheet" href="uikit/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/magnific-popup.css">
+    <link rel="stylesheet" href="css/jquery-ui.css">
+    <link rel="stylesheet" href="css/owl.carousel.min.css">
+    <link rel="stylesheet" href="css/owl.theme.default.min.css">
+
+    <link rel="stylesheet" href="fonts/flaticon/font/flaticon.css">
+
+    <link rel="stylesheet" href="css/aos.css">
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+  	<link rel="stylesheet" href="css/p-loading.min.css" />
+  	<link rel="stylesheet" href="css/spinkit.css" />
+  	<link rel="stylesheet" href="uikit/bootstrap-datepicker/css/datepicker.css" />
+  	
+  	<script src="js/jquery-3.3.1.min.js"></script>
+  	<script src="js/moment.min.js"></script>
+  	<script src="js/chart-master/Chart.js"></script>
+  	<script src="js/MyUtils.js"></script>
+  	<script src="js/p-loading.min.js"></script>
+  	<script src="js/pl-spinkit.js"></script>
+  </head>
+  <style>
+  	.table-logo {
+  		width: 50px;
+  		height: 50px;
+  		border-radius: 30%;
+  	}
+  	.nav-tabs {
+  		background: #e0e1e7;
+  	}
+  </style>
+  
+  <script>
+  </script>
+  
+  <script>
+ 	function f_init(){
+ 		$.fn.ploading.defaults = {
+		    useAddOns: ['plspinkit'],//we are calling the pl-spinkit by default
+		    spinner: 'foldingCube', //we are defining the rotatingPlane spinner as default,
+		    maskColor: 'rgba(234, 234, 234, 0.8)' //Change the mask color background to white as the spinners colors is black
+		};
+ 		
+ 		//$("tr").addClass("table-info");
+ 	}
+ 	
+  	$(document).ready(f_init);
+  </script>
+  
+  <body>
+  
+  <div class="site-wrap">
+
+    <div class="site-mobile-menu">
+      <div class="site-mobile-menu-header">
+        <div class="site-mobile-menu-close mt-3">
+          <span class="icon-close2 js-menu-toggle"></span>
+        </div>
+      </div>
+      <div class="site-mobile-menu-body"></div>
+    </div>
+   
+    <header class="site-navbar py-4 bg-white" role="banner">
+
+      <div class="container">
+        <div class="row align-items-center">
+          
+          <div class="col-11 col-xl-2">
+            <h1 class="mb-0 site-logo"><a href="index.html" class="text-black h2 mb-0">[[${appName}]]</a></h1>
+          </div>
+          <div class="col-12 col-md-10 d-none d-xl-block">
+            <nav class="site-navigation position-relative text-right" role="navigation">
+
+              <ul class="site-menu js-clone-nav mr-auto d-none d-lg-block">
+                <li><a href="index">Home</a></li>
+                <li class="active"><a href="stock">Stocks</a></li>
+                <li class="has-children">
+                  <a href="services.html">Services</a>
+                  <ul class="dropdown">
+                    <li><a href="services.html">Web Applications</a></li>
+                    <li><a href="services.html">WordPress Dev</a></li>
+                    <li><a href="services.html">Mobile Applications</a></li>
+                    <li><a href="services.html">eCommerce</a></li>
+                  </ul>
+                </li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="blog.html">Blog</a></li>
+                <li><a href="contact.html">Contact</a></li>
+              </ul>
+            </nav>
+          </div>
+
+
+          <div class="d-inline-block d-xl-none ml-md-0 mr-auto py-3" style="position: relative; top: 3px;"><a href="#" class="site-menu-toggle js-menu-toggle text-black"><span class="icon-menu h3"></span></a></div>
+
+          </div>
+
+        </div>
+      </div>
+      
+    </header>
+
+  
+
+    <div class="site-blocks-cover inner-page-cover overlay" style="background-image: url(images/hero_1.jpg);" data-aos="fade" data-stellar-background-ratio="0.5">
+      <div class="container">
+        <div class="row align-items-center justify-content-center text-center">
+
+          <div class="col-md-12 mt-5" data-aos="fade-up" data-aos-delay="400">
+                        
+            <div class="row justify-content-center mb-4">
+              <div class="col-md-8 text-center">
+                <h1>Apple Inc. (AAPL)</h1>
+                <p class="lead mb-5">Get Some Predictions</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>  
+    
+    <section class="site-section" style="padding: 2em 0">
+    	<div class="container">
+			<div class="row">
+				<div class="col-lg-4 col-sm-12 text-center" style="border-right: 2px solid #d3d3d3">
+					<div class="col-12 mt-4">
+						<h3>
+							<span th:text="${stockValue}">$185.65</span>
+							&nbsp;&nbsp;
+							<span th:text="${#numbers.formatDecimal(stockNet, 1, 2)} + '%'">24.2%</span>
+							<i class="fas" th:classappend="(${stockChange}>0) ? 'fa-arrow-up text-success' : 'fa-arrow-down text-danger'"></i>
+						</h3>
+					</div>
+					<div class="col-12 p-5 pl-8 pr-8">
+						<div class="card shadow">
+							<div class="m-1">
+								<i class="fas fa-external-link-alt"></i>
+								&nbsp;&nbsp;&nbsp;&nbsp;Website
+							</div>
+							<div class="m-1">
+								<i class="fas fa-chart-line"></i>
+								&nbsp;&nbsp;&nbsp;&nbsp;Nasdaq
+							</div>
+							<div class="m-1">
+								<i class="fas fa-search"></i>
+								&nbsp;&nbsp;&nbsp;&nbsp;Explorer
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-8 col-sm-12 text-center">
+					<div class="col-12" style="border-bottom: 2px solid #d3d3d3">
+						<h3>
+							Key Stock Data
+						</h3>
+					</div>
+					<div class="row col-12">
+						<div class="col-lg-6 col-sm-12 p-2">
+							<div class="card shadow table-responsive">
+								<table class="table table-sm table-borderless align-items-center table-flush table-hover mb-0">
+									<tbody>
+										<tr>
+											<th>exchange:</th>
+											<td>Nasdaq Global Select</td>
+										</tr>
+										<tr>
+											<th>industry:</th>
+											<td>Computer Hardware</td>
+										</tr>
+										<tr>
+											<th>sector:</th>
+											<td>Technology</td>
+										</tr>
+										<tr>
+											<th>open:</th>
+											<td>184.85</td>
+										</tr>
+										<tr>
+											<th>previous_close:</th>
+											<td>183.73</td>
+										</tr>
+										<tr>
+											<th>market_cap:</th>
+											<td>881.286B</td>
+										</tr>
+										<tr>
+											<th>forward_dividend_yield:</th>
+											<td>2.92 (1.61%)</td>
+										</tr>
+		    						</tbody>
+								</table>
+							</div>
+						</div>
+						<div class="col-lg-6 col-sm-12 p-2">
+							<div class="card shadow table-responsive">
+								<table class="table table-sm table-borderless align-items-center table-flush table-hover mb-0">
+									<tbody>
+										<tr>
+											<th>avg_volume:</th>
+											<td>34,603,278</td>
+										</tr>
+										<tr>
+											<th>ex_dividend_date:</th>
+											<td>2019-02-08</td>
+										</tr>
+										<tr>
+											<th>beta:</th>
+											<td>0.99</td>
+										</tr>
+										<tr>
+											<th>pe_ratio:</th>
+											<td>15.42</td>
+										</tr>
+										<tr>
+											<th>eps:</th>
+											<td>12.12</td>
+										</tr>
+										<tr>
+											<th>week_52_range:</th>
+											<td>142.00 - 233.47</td>
+										</tr>
+										<tr>
+											<th>earnings_date:</th>
+											<td>Apr 29, 2019 - May 3, 2019</td>
+										</tr>
+		    						</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- /row -->
+		</div>
+    </section>
+	
+	<section style="padding: 1em 0">
+		<div class="container">
+			<ul class="nav nav-tabs nav-fill" id="myTab" role="tablist">
+				<li class="nav-item">
+				  	<a class="nav-link active text-dark" id="home-tab" data-toggle="tab" href="#prediction" role="tab" aria-controls="prediction" aria-selected="true">Prediction</a>
+				</li>
+				<li class="nav-item">
+				  	<a class="nav-link text-dark" id="profile-tab" data-toggle="tab" href="#news" role="tab" aria-controls="news" aria-selected="false">Social & News</a>
+				</li>
+				<li class="nav-item">
+				  	<a class="nav-link text-dark" id="contact-tab" data-toggle="tab" href="#history" role="tab" aria-controls="history" aria-selected="false">Historical Data</a>
+				</li>
+			</ul>
+			<div class="tab-content" id="myTabContent">
+				<div class="tab-pane fade show active" id="prediction" role="tabpanel" aria-labelledby="prediction-tab">
+					<div class="container">
+						<div class="row text-center mt-3">
+							<div class="col-3"></div>
+							<div class="col-6">
+								<form action="#">
+					                <div class="form-group row">
+					                  	<label class="col-form-label col-4">Default Datepicker</label>
+					                  	<div class="col-8 input-group">
+					                  		<input class="form-control datepicker" data-date-format="yyyy-mm-dd" placeholder="Choose a Date" type="text" value="">
+					                  		<div class="input-group-prepend">
+										    	<div class="input-group-text">
+										    		<i class="far fa-calendar-alt"></i>
+										    	</div>
+										    </div>
+					                  	</div>
+					                </div>
+				                </form>
+			                </div>
+			                <div class="col-3"></div>
+						</div>
+					</div>
+				</div>
+				<div class="tab-pane fade" id="news" role="tabpanel" aria-labelledby="news-tab">456</div>
+				<div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="history-tab">789</div>
+			</div>
+		</div>
+	</section>
+	
+    <footer class="site-footer">
+      <div class="container">
+        <div class="row text-center">
+          <div class="col-md-12">
+            <div class="border-top">
+            <p>
+            	Copyright &copy;<script>document.write(new Date().getFullYear());</script> | Made with <i class="icon-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank" >Mad</a> in SFU Big Data
+            </p>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script src="js/jquery-migrate-3.0.1.min.js"></script>
+  <script src="js/jquery-ui.js"></script>
+  <script src="js/popper.min.js"></script>
+  <script src="uikit/bootstrap/js/bootstrap.min.js"></script>
+  <script src="js/owl.carousel.min.js"></script>
+  <script src="js/jquery.stellar.min.js"></script>
+  <script src="js/jquery.countdown.min.js"></script>
+  <script src="js/jquery.magnific-popup.min.js"></script>
+  <script src="js/aos.js"></script>
+  <script src="uikit/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+  
+  <script src="js/main.js"></script>
+    
+  </body>
+</html>

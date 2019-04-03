@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>[[${appName}]]</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://fonts.googleapis.com/css?family=Quicksand:300,400,500,700,900" rel="stylesheet">
+    <link rel="stylesheet" href="fonts/icomoon/style.css">
+
+    <link rel="stylesheet" href="uikit/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/magnific-popup.css">
+    <link rel="stylesheet" href="css/jquery-ui.css">
+    <link rel="stylesheet" href="css/owl.carousel.min.css">
+    <link rel="stylesheet" href="css/owl.theme.default.min.css">
+
+    <link rel="stylesheet" href="fonts/flaticon/font/flaticon.css">
+
+    <link rel="stylesheet" href="css/aos.css">
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+  	<link rel="stylesheet" href="css/p-loading.min.css" />
+  	<link rel="stylesheet" href="css/spinkit.css" />
+  	
+  	<script src="js/jquery-3.3.1.min.js"></script>
+  	<script src="js/moment.min.js"></script>
+  	<script src="js/chart-master/Chart.js"></script>
+  	<script src="js/MyUtils.js"></script>
+  	<script src="js/p-loading.min.js"></script>
+  	<script src="js/pl-spinkit.js"></script>
+  </head>
+  <style>
+  	.table-logo {
+  		width: 50px;
+  		height: 50px;
+  		border-radius: 30%;
+  	}
+  </style>
+  
+  <script>
+	  var tmp = new Date();
+	  var endDate = f_formatDate(tmp);
+	  tmp.setDate(tmp.getDate()-14)
+	  var startDate = f_formatDate(tmp);
+	  
+	  var marketData = {};
+  </script>
+  
+  <script>
+ 	function f_init(){
+ 		$.fn.ploading.defaults = {
+		    useAddOns: ['plspinkit'],//we are calling the pl-spinkit by default
+		    spinner: 'foldingCube', //we are defining the rotatingPlane spinner as default,
+		    maskColor: 'rgba(234, 234, 234, 0.8)' //Change the mask color background to white as the spinners colors is black
+		};
+ 		
+ 		//f_getMarketData1();
+ 	} 	
+ 	
+ 	function f_getMarketData1(){
+ 		$('#nasdaqOverviewContainer').ploading({action: 'show'});
+ 		$('#nasdaqViewContainer').ploading({action: 'show'});
+ 		$.ajax({
+			type: 'GET',
+			url: 'https://www.quandl.com/api/v3/datasets/NASDAQOMX/COMP.json?api_key=1HkF7z1EegezVxzU8ZG-',
+			data: {
+				start_date: startDate,
+				end_date: endDate
+			},
+			dataType: "json",
+			success: function(ret) {
+				if (!!ret) {
+					$('#nasdaqViewContainer').ploading({action: 'hide'});
+					f_updateStockItem("market1", ret.dataset.data);
+					f_drawNasdaqView("Nasdaq Composite", ret.dataset.data);
+					marketData['market1'] = ret.dataset.data;
+				}
+			},
+			complete: function (xhr, ts){
+				f_getMarketData2();
+			}
+	    });
+ 	}
+ 	
+ 	function f_getMarketData2(){
+ 		$.ajax({
+			type: 'GET',
+			url: 'https://www.quandl.com/api/v3/datasets/NASDAQOMX/NDX.json?api_key=1HkF7z1EegezVxzU8ZG-',
+			data: {
+				start_date: startDate,
+				end_date: endDate
+			},
+			dataType: "json",
+			success: function(ret) {
+				if (!!ret) {
+					f_updateStockItem("market2", ret.dataset.data);
+					marketData['market2'] = ret.dataset.data;
+				}
+			},
+			complete: function (xhr, ts){
+				f_getMarketData3();
+			}
+	    });
+ 	}
+ 	
+ 	function f_getMarketData3(){
+ 		$.ajax({
+			type: 'GET',
+			url: 'https://www.quandl.com/api/v3/datasets/NASDAQOMX/QMI.json?api_key=1HkF7z1EegezVxzU8ZG-',
+			data: {
+				start_date: startDate,
+				end_date: endDate
+			},
+			dataType: "json",
+			success: function(ret) {
+				if (!!ret) {
+					f_updateStockItem("market3", ret.dataset.data);
+					marketData['market3'] = ret.dataset.data;
+				}
+			},
+			complete: function (xhr, ts){
+				f_getMarketData4();
+			}
+	    });
+ 	}
+ 	
+ 	function f_getMarketData4(){
+ 		$.ajax({
+			type: 'GET',
+			url: 'https://www.quandl.com/api/v3/datasets/NASDAQOMX/QIV.json?api_key=1HkF7z1EegezVxzU8ZG-',
+			data: {
+				start_date: startDate,
+				end_date: endDate
+			},
+			dataType: "json",
+			success: function(ret) {
+				if (!!ret) {
+					f_updateStockItem("market4", ret.dataset.data);
+					marketData['market4'] = ret.dataset.data;
+				}
+			},
+			complete: function (xhr, ts){
+				$('#nasdaqOverviewContainer').ploading({action: 'hide'});
+			}
+	    });
+ 	}
+ 	function f_clickMarket1(){
+ 		f_drawNasdaqView("Nasdaq Composite", marketData['market1']);
+ 	}
+ 	function f_clickMarket2(){
+ 		f_drawNasdaqView("NASDAQ-100 Index", marketData['market2']);
+ 	}
+ 	function f_clickMarket3(){
+ 		f_drawNasdaqView("NASDAQ-100 Pre-Market Indicator", marketData['market3']);
+ 	}
+ 	function f_clickMarket4(){
+ 		f_drawNasdaqView("NASDAQ-100 After Hours Indicator", marketData['market4']);
+ 	}
+ 	
+ 	function f_updateStockItem(id, ret){
+ 		$("#value_"+id).text(ret[0][1]);
+ 		var change = ret[0][1]-ret[1][1];
+ 		$("#change_"+id).text(change.toFixed(2));
+ 		$("#arrow_"+id).removeClass("fa-arrow-up fa-arrow-down text-success text-danger");
+ 		if (change > 0) {
+ 			$("#arrow_"+id).addClass("fa-arrow-up text-success");
+ 		} else {
+ 			$("#arrow_"+id).addClass("fa-arrow-down text-danger");
+ 		}
+ 		var net = change/ret[1][1]*100;
+ 		net = net.toFixed(2);
+ 		$("#net_"+id).text(net+"%");
+ 	}
+ 	
+ 	function f_drawNasdaqView(title, ret){
+ 		$("#nasdaqViewTitle").text(title);
+ 		$("#nasdaqViewContainer").children().remove();
+		var canvasHtml = '<canvas id="nasdaqView" width="300" height="134" ></canvas>'
+		$("#nasdaqViewContainer").append(canvasHtml);
+		
+		var dataSet = [];
+		var labelSet = [];
+		for (var i=0;i<ret.length;i++){
+			dataSet.push(ret[i][1]);
+			labelSet.push(ret[i][0]);
+		}
+		new Chart($("#nasdaqView"), {
+		    type: 'line',
+		    data: {
+		        labels: labelSet,
+		        datasets: [{
+		            data: dataSet,
+		            backgroundColor: [
+		                'rgba(54, 162, 235, 0.2)'
+		            ],
+		            borderColor: [
+		                'rgba(54, 162, 235, 1)'
+		            ],
+		            borderWidth: 1
+		        }]
+		    },
+		    options: {
+		        scales: {
+		        	xAxes: [{
+		                type: 'time',
+		                time: {
+		                    displayFormats: {
+		                        quarter: 'MMM D'
+		                    }
+		                }
+		            }]
+		        },
+		        legend: {
+		            display: false
+		        }
+		        //responsive: false
+		    }
+		});
+ 	}
+  	$(document).ready(f_init);
+  </script>
+  
+  <body>
+  
+  <div class="site-wrap">
+
+    <div class="site-mobile-menu">
+      <div class="site-mobile-menu-header">
+        <div class="site-mobile-menu-close mt-3">
+          <span class="icon-close2 js-menu-toggle"></span>
+        </div>
+      </div>
+      <div class="site-mobile-menu-body"></div>
+    </div>
+   
+    <header class="site-navbar py-4 bg-white" role="banner">
+
+      <div class="container">
+        <div class="row align-items-center">
+          
+          <div class="col-11 col-xl-2">
+            <h1 class="mb-0 site-logo"><a href="index.html" class="text-black h2 mb-0">[[${appName}]]</a></h1>
+          </div>
+          <div class="col-12 col-md-10 d-none d-xl-block">
+            <nav class="site-navigation position-relative text-right" role="navigation">
+
+              <ul class="site-menu js-clone-nav mr-auto d-none d-lg-block">
+                <li><a href="index">Home</a></li>
+                <li class="active"><a href="stock">Stocks</a></li>
+                <li class="has-children">
+                  <a href="services.html">Services</a>
+                  <ul class="dropdown">
+                    <li><a href="services.html">Web Applications</a></li>
+                    <li><a href="services.html">WordPress Dev</a></li>
+                    <li><a href="services.html">Mobile Applications</a></li>
+                    <li><a href="services.html">eCommerce</a></li>
+                  </ul>
+                </li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="blog.html">Blog</a></li>
+                <li><a href="contact.html">Contact</a></li>
+              </ul>
+            </nav>
+          </div>
+
+
+          <div class="d-inline-block d-xl-none ml-md-0 mr-auto py-3" style="position: relative; top: 3px;"><a href="#" class="site-menu-toggle js-menu-toggle text-black"><span class="icon-menu h3"></span></a></div>
+
+          </div>
+
+        </div>
+      </div>
+      
+    </header>
+
+  
+
+    <div class="site-blocks-cover inner-page-cover overlay" style="background-image: url(images/hero_1.jpg);" data-aos="fade" data-stellar-background-ratio="0.5">
+      <div class="container">
+        <div class="row align-items-center justify-content-center text-center">
+
+          <div class="col-md-12 mt-5" data-aos="fade-up" data-aos-delay="400">
+                        
+            <div class="row justify-content-center mb-4">
+              <div class="col-md-8 text-center">
+                <h1>Nasdaq Stocks</h1>
+                <p class="lead mb-5">Get Some Predictions</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>  
+
+
+    
+    <section class="site-section" style="padding: 2em 0">
+    
+		<div class="container">
+			<div class="row mb-5">
+			  <div class="col-xl-6 mb-5 mb-xl-0">
+			    <div class="card shadow">
+			      <div class="card-header border-0">
+			        <div class="row align-items-center">
+			          <div class="col">
+			            <h3 class="mb-0 text-center">Nasdaq Market Overview</h3>
+			          </div>
+			        </div>
+			      </div>
+			      <div id="nasdaqOverviewContainer" class="table-responsive">
+			        <!-- Projects table -->
+			      <table class="table align-items-center text-center table-flush table-hover mb-0">
+			        <thead class="thead-light">
+			          <tr>
+			            <th scope="col">Index</th>
+			            <th scope="col">Value</th>
+			            <th scope="col">Change</th>
+			            <th scope="col">Net</th>
+			          </tr>
+			        </thead>
+			        <tbody>
+			          <tr onclick="f_clickMarket1()">
+			            <th scope="row">NASDAQ</th>
+			            <td id="value_market1">4,569</td>
+			            <td>
+			              <span id="change_market1">58.3</span> <i id="arrow_market1" class="fas fa-arrow-up text-success mr-3"></i>
+			            </td>
+			            <td id="net_market1">0.78%</td>
+			          </tr>
+			          <tr onclick="f_clickMarket2()">
+			            <th scope="row">NASDAQ-100 (NDX)</th>
+			            <td id="value_market2">3,985</td>
+			            <td>
+			              <span id="change_market2">58.3</span> <i id="arrow_market2" class="fas fa-arrow-down text-danger mr-3"></i>
+			            </td>
+			            <td id="net_market2">0.78%</td>
+			          </tr>
+			          <tr onclick="f_clickMarket3()">
+			            <th scope="row">Pre-Market (NDX)</th>
+			            <td id="value_market3">3,513</td>
+			            <td>
+			              <span id="change_market3">58.3</span> <i id="arrow_market3" class="fas fa-arrow-down text-danger mr-3"></i>
+			            </td>
+			            <td id="net_market3">0.78%</td>
+			          </tr>
+			          <tr onclick="f_clickMarket4()">
+			            <th scope="row">After Hours (NDX)</th>
+			            <td id="value_market4">2,050</td>
+			            <td>
+			            	<span id="change_market4">58.3</span> <i id="arrow_market4" class="fas fa-arrow-up text-success mr-3"></i>
+			            </td>
+			            <td id="net_market4">0.78%</td>
+			          </tr>
+			        </tbody>
+			      </table>
+			    </div>
+			  </div>
+			</div>
+			
+			<div class="col-xl-6 mb-5 mb-xl-0">
+			    <div class="card shadow">
+			      <div class="card-header border-0">
+			        <div class="row align-items-center">
+			          <div class="col">
+			            <h3 id="nasdaqViewTitle" class="text-center mb-0">Nasdaq Composite</h3>
+			          </div>
+			        </div>
+			      </div>
+			      <div id="nasdaqViewContainer" class="panel-body text-center">
+	              	<canvas id="nasdaqView" width="300" height="134" ></canvas>
+	        	  </div>
+			   </div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="container">
+	    <div class="row">
+	        <div class="col">
+	          <div class="card shadow">
+	            <div class="card-header border-0">
+	              <h3 class="mb-0 text-center">Selected Stocks</h3>
+	            </div>
+	            <div class="table-responsive">
+	              <table class="table align-items-center text-center table-flush table-hover mb-0">
+	                <thead class="thead-light">
+	                  <tr>
+	                    <th scope="col">Company</th>
+	                    <th scope="col">Value</th>
+	                    <th scope="col">Change</th>
+	                    <th scope="col">Net</th>
+	                  </tr>
+	                </thead>
+	                <tbody>
+	                  <tr th:each="stock : ${selectedStockList}">
+	                    <th scope="row">
+	                      <div class="media align-items-center pl-4">
+	                        <a th:href="@{/stock?stockId={stockId}(stockId=${stock.id})}" class="avatar rounded-circle">
+	                          <img class="table-logo" alt="Image placeholder" th:src="@{/images/company_logo/{stockId}.png(stockId=${#strings.toLowerCase(stock.id)})}">
+	                        </a>
+	                        <div class="media-body pr-5">
+	                        	<a th:href="@{/stock?stockId={stockId}(stockId=${stock.id})}" class="text-info">
+	                          		<span class="mb-0 text-sm" th:text="${stock.fullName}">Apple</span>
+	                          	</a>
+	                        </div>
+	                      </div>
+	                    </th>
+	                    <td th:text="${stock.value}">$4,400 USD</td>
+	                    <td><span th:text="${#numbers.formatDecimal(stock.change, 1, 2)}">42.25</span> <i class="fas mr-3" th:classappend="(${stock.change}>0) ? 'fa-arrow-up text-success' : 'fa-arrow-down text-danger'"></i></td>
+	                    <td th:text="${#numbers.formatDecimal(stock.net, 1, 2)} + '%'">0.33%</td>
+	                  </tr>
+	                </tbody>
+	              </table>
+	            </div>
+	            <!--*/ 
+	            <div class="card-footer py-4">
+	              <nav aria-label="...">
+	                <ul class="pagination justify-content-end mb-0">
+	                  <li class="page-item disabled">
+	                    <a class="page-link" href="#" tabindex="-1">
+	                      <i class="fas fa-angle-left"></i>
+	                      <span class="sr-only">Previous</span>
+	                    </a>
+	                  </li>
+	                  <li class="page-item active">
+	                    <a class="page-link" href="#">1</a>
+	                  </li>
+	                  <li class="page-item">
+	                    <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
+	                  </li>
+	                  <li class="page-item"><a class="page-link" href="#">3</a></li>
+	                  <li class="page-item">
+	                    <a class="page-link" href="#">
+	                      <i class="fas fa-angle-right"></i>
+	                      <span class="sr-only">Next</span>
+	                    </a>
+	                  </li>
+	                </ul>
+	              </nav>
+	            </div>
+	            /*-->
+	          </div>
+	        </div>
+	      </div>
+	  </div>
+    </section>
+
+    <footer class="site-footer">
+      <div class="container">
+        <div class="row text-center">
+          <div class="col-md-12">
+            <div class="border-top">
+            <p>
+            	Copyright &copy;<script>document.write(new Date().getFullYear());</script> | Made with <i class="icon-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank" >Mad</a> in SFU Big Data
+            </p>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script src="js/jquery-migrate-3.0.1.min.js"></script>
+  <script src="js/jquery-ui.js"></script>
+  <script src="js/popper.min.js"></script>
+  <script src="uikit/bootstrap/js/bootstrap.min.js"></script>
+  <script src="js/owl.carousel.min.js"></script>
+  <script src="js/jquery.stellar.min.js"></script>
+  <script src="js/jquery.countdown.min.js"></script>
+  <script src="js/jquery.magnific-popup.min.js"></script>
+  <script src="js/aos.js"></script>
+
+  <script src="js/main.js"></script>
+    
+  </body>
+</html>
