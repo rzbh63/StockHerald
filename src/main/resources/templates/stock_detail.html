@@ -19,17 +19,23 @@
     <link rel="stylesheet" href="css/aos.css">
 
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/timeline.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
   	<link rel="stylesheet" href="css/p-loading.min.css" />
   	<link rel="stylesheet" href="css/spinkit.css" />
-  	<link rel="stylesheet" href="uikit/bootstrap-datepicker/css/datepicker.css" />
+  	<link rel="stylesheet" href="uikit/bootstrap-datepicker-164/css/bootstrap-datepicker.css" />
   	
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.18/datatables.min.css"/>
+ 
+
+
   	<script src="js/jquery-3.3.1.min.js"></script>
   	<script src="js/moment.min.js"></script>
   	<script src="js/chart-master/Chart.js"></script>
   	<script src="js/MyUtils.js"></script>
   	<script src="js/p-loading.min.js"></script>
   	<script src="js/pl-spinkit.js"></script>
+  	<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.18/datatables.min.js"></script>
   </head>
   <style>
   	.table-logo {
@@ -40,20 +46,327 @@
   	.nav-tabs {
   		background: #e0e1e7;
   	}
+  	.news-arrow {
+  		font-size: 1.3rem;
+  	}
+  	.social-icon {
+  		font-size: 1.5rem;
+  		margin-top: 0.3rem;
+  	}
+  	.social-avatar {
+  		font-size:3rem;
+  		margin-top:0.8rem;
+  	}
+  	
   </style>
   
-  <script>
+  <script th:inline="javascript">
+  	var unibitApiKey = [[${unibitApiKey}]];//'tqsmgYK88T2zgve9e4vni0E2uVEvWoik';
+  	var stockId = [[${stockId}]];
+  	var companyName = [[${companyName}]];
+  	var tmp = new Date();
+	var today = f_formatDate(tmp);
+	tmp.setDate(tmp.getDate()-30)
+	var aMonthAgo = f_formatDate(tmp);
   </script>
   
   <script>
  	function f_init(){
  		$.fn.ploading.defaults = {
 		    useAddOns: ['plspinkit'],//we are calling the pl-spinkit by default
-		    spinner: 'foldingCube', //we are defining the rotatingPlane spinner as default,
+		    spinner: 'skCircle', //we are defining the rotatingPlane spinner as default,
 		    maskColor: 'rgba(234, 234, 234, 0.8)' //Change the mask color background to white as the spinners colors is black
 		};
  		
- 		//$("tr").addClass("table-info");
+ 		f_getKeyStockData1();
+ 		
+ 		$('.input-group.date').datepicker({
+ 			format: 'yyyy-mm-dd',
+ 			todayBtn: true,
+ 			startDate: today
+ 		});
+ 		
+ 		$('.input-daterange').datepicker({
+ 			format: 'yyyy-mm-dd',
+ 			todayBtn: true,
+ 			endDate: today
+ 		});
+ 		
+ 		$("#historyFromDate").datepicker('update', aMonthAgo);
+ 		$("#historyToDate").datepicker('update', today);
+ 		
+ 		$('#historyTable').DataTable({
+	        ajax: {
+	        	"url": "https://api.unibit.ai/historicalstockprice/" + stockId + "?range=1m&interval=1&AccessKey=" + unibitApiKey,
+	        	"dataSrc": "Stock price"
+	        },
+	        //lengthMenu: [ 5, 10, 25],
+	        pageLength: 10,
+	        responsive: true,
+	        autoWidth: false,
+	        order: [0, "desc"],
+	        drawCallback: function( settings ) {
+	        	$('[data-toggle="tooltip"]').tooltip();
+	        	
+	        	$('#historyTable tbody').off('click', '.show-news-btn');
+	        	
+	        	$('#historyTable tbody').on( 'click', '.show-news-btn', function () {
+	        		var table = $('#historyTable').DataTable();
+	        		var rowData = table.row( $(this).parents('tr') ).data();
+	        		f_showNewsModal(rowData.date, rowData.date, 'history');
+	        	});
+	        },
+	        columns: [
+	        	{ 
+	        		"data": "date",
+	        		responsivePriority: 1
+	        	},
+	            {
+	        		"data": "open",
+	        		responsivePriority: 1
+	        	},
+	        	{
+	        		"data": "close",
+	        		responsivePriority: 1
+	        	},
+	            {
+	        		"data": "high",
+	        		responsivePriority: 0
+	        	},
+	            {
+	        		"data": "low",
+	        		responsivePriority: 0
+	        	},
+	        	{
+	        		"data": "date",
+	        		responsivePriority: 1,
+	        		render: function (data, type, row) {
+	        			if (data < aMonthAgo) {
+	        				return 'N/A';
+	        			} else {
+							return '<button type="button" class="btn btn-link btn-sm show-news-btn" data-toggle="tooltip" data-placement="right" title="View news of this Date">View</button>';
+	        			}
+	        		}
+	        	}
+	        ]
+	    });
+ 	}
+ 	
+ 	function f_getKeyStockData1(){
+ 		$('#keyStockDataContainer').ploading({action: 'show'});
+ 		$.ajax({
+			type: 'GET',
+			url: 'https://api.unibit.ai/companyprofile/' + stockId + '?AccessKey=' + unibitApiKey,
+			dataType: "json",
+			success: function(ret) {
+				if (!!ret) {
+					for (key in ret){
+						$("#keydata_"+key).text(ret[key]);
+					}
+					$("#website").attr("href", ret["website"]);
+					$("#nasdaq_link").attr("href", "https://www.nasdaq.com/symbol/" + stockId + "/real-time");
+					$("#explorer_link").attr("href", "https://www.google.com/search?q=" + ret["company_name"]);
+				}
+			},
+			complete: function (xhr, ts){
+				f_getKeyStockData2();
+			}
+	    });
+ 	}
+ 	
+ 	function f_getKeyStockData2(){
+ 		$.ajax({
+			type: 'GET',
+			url: 'https://api.unibit.ai/financials/summary/' + stockId + '?AccessKey=' + unibitApiKey,
+			dataType: "json",
+			success: function(ret) {
+				if (!!ret) {
+					for (key in ret){
+						$("#keydata_"+key).text(ret[key]);
+					}
+				}
+			},
+			complete: function (xhr, ts){
+				$('#keyStockDataContainer').ploading({action: 'hide'});
+				f_getRecentNews();
+			}
+	    });
+ 	}
+ 	
+ 	function f_predict(){
+ 		var predictDate = $("#predictDate").val();
+ 		
+ 		if (!predictDate){
+ 			$("#predictDate").addClass("is-invalid");
+ 			return;
+ 		}
+ 		if (!f_isValidDate(predictDate)){
+ 			alert("Wrong Date Format!");
+ 			return;
+ 		}
+ 		$("#predictDate").removeClass("is-invalid");
+ 		$("#predictDateLabel").text(predictDate);
+ 		$("#predictionSection").show();
+ 		
+ 		$('#predictionSection').ploading({action: 'show'});
+ 		
+ 		$.ajax({
+			type: 'GET',
+			url: '/predict',
+			dataType: "json",
+			data: {
+				stockId: stockId,
+				predictDate: predictDate
+			},
+			success: function(ret) {
+				if (!!ret) {
+					$("#lowPredictValue").text(ret.low);
+					$("#highPredictValue").text(ret.high);					
+				}
+			},
+			complete: function (xhr, ts){
+				$('#predictionSection').ploading({action: 'hide'});
+			}
+ 		});
+ 	}
+ 	
+ 	function f_getRecentNews(){
+ 		
+ 		$('#news').ploading({action: 'show'});
+ 		
+ 		$.ajax({
+			type: 'GET',
+			url: 'https://newsapi.org/v2/everything',
+			dataType: "json",
+			data: {
+				q: companyName,
+				sources: 'bloomberg,the-wall-street-journal,cnn,reuters,the-washington-post,bbc-news',
+				from: aMonthAgo,
+				to: today,
+				language: 'en',
+				sortBy: 'publishedAt',
+				pageSize: 100,
+				page: 1,
+				apiKey: '5edc0288c64c454a93dc91009fc26865'
+			},
+			success: function(ret) {
+				if (!!ret) {
+					$('#recentNewsContainer').children().remove();
+					var articleNum = ret.articles.length <= 5 ? ret.articles.length : 5;
+					
+					for (var i=0; i<articleNum; i++){
+						var time = ret.articles[i].publishedAt;
+						try{
+							time = time.replace("T", " ");
+							time = time.replace("Z", "");
+						}catch(e){}
+						
+						var newsHTML = '<div class="col-lg-6 col-sm-12 pt-3 row">'
+											+'<div class="col-1 text-right pr-0">'
+												+'<i class="fas fa-caret-right text-info news-arrow"></i>'
+											+'</div>'
+											+'<div class="col-11">'
+												+'<p class="mb-1">'
+													+'<a href="' + ret.articles[i].url + '" target="_blank" class="text-secondary">'
+														+ret.articles[i].title
+													+'</a>'
+												+'</p>'
+												+'<p class="text-muted mb-0">' + time + ' - ' + ret.articles[i].source.name + '</p>'
+											+'</div>'
+										+'</div>';
+					 	$('#recentNewsContainer').append(newsHTML);
+					}
+					
+					if (ret.articles.length > 5) {
+						var newsHTML = '<div class="col-lg-6 col-sm-12 pt-5 row">'
+											+'<div class="col-1 text-right pr-0">'
+												+'<i class="fas fa-angle-double-right text-info news-arrow"></i>'
+											+'</div>'
+											+'<div class="col-11 text-center">'
+												+'<button type="button" class="btn btn-outline-info" onclick="f_showNewsModal(\'' + aMonthAgo + '\',\'' + today + '\', \'recent\')">View More</button>'
+											+'</div>'
+										+'</div>';
+					 	$('#recentNewsContainer').append(newsHTML);
+					}
+				}
+			},
+			complete: function (xhr, ts){
+				$('#news').ploading({action: 'hide'});
+			}
+	    });
+ 	}
+ 	
+ 	function f_showNewsModal(fromDate, toDate, mode){
+ 		if (!fromDate || fromDate==null){
+ 			return;
+ 		}
+ 		
+ 		//$('#newsModal').modal('show');
+ 		//return;
+ 		
+ 		$('body').ploading({action: 'show'});
+ 		
+ 		$.ajax({
+			type: 'GET',
+			url: 'https://newsapi.org/v2/everything',
+			dataType: "json",
+			data: {
+				q: companyName,
+				sources: 'bloomberg,the-wall-street-journal,cnn,reuters,the-washington-post,bbc-news',
+				from: fromDate,
+				to: toDate,
+				language: 'en',
+				sortBy: 'publishedAt',
+				pageSize: 100,
+				page: 1,
+				apiKey: '5edc0288c64c454a93dc91009fc26865'
+			},
+			success: function(ret) {
+				if (!!ret) {
+					$('#newsModalTimeLineContainer').children().remove();
+					for (var i=0; i<ret.articles.length; i++){
+						
+						var time = ret.articles[i].publishedAt;
+						try{
+							time = time.replace("T", " ");
+							time = time.replace("Z", "");
+						}catch(e){}
+						
+						var description = ret.articles[i].description != null ? ret.articles[i].description : ret.articles[i].content;
+						
+						var newsHTML = '<div class="row no-gutters justify-content-end justify-content-md-around align-items-start  timeline-nodes">'
+											+'<div class="col-10 col-md-5 order-3 order-md-1 timeline-content">'
+												+'<a href="' + ret.articles[i].url + '" target="_blank" class="media-1">'
+													+'<h4 class=" text-light">' + ret.articles[i].title + '</h4>'
+													+'<p>' + description + '</p>'
+													+'<div class="media-1-content">'
+														+'<h2>Read Full Content</h2>'
+													+'</div>'
+												+'</a>'
+											+'</div>'
+											+'<div class="col-2 col-sm-1 px-md-3 order-2 timeline-image text-md-center">'
+												+'<img src="images/newsources/' + ret.articles[i].source.id + '.png" class="img-fluid" alt="img">'
+											+'</div>'
+											+'<div class="col-10 col-md-5 order-1 order-md-3 py-3 timeline-date">'
+												+'<time>' + ret.articles[i].source.name + ' - ' + time + '</time>'
+											+'</div>'
+										+'</div>';
+											
+					 	$('#newsModalTimeLineContainer').append(newsHTML);
+					}
+					if (mode == 'history'){
+						$('#newsModalTitle').text('News for ' + companyName + ' at ' + toDate);
+					}else {
+						$('#newsModalTitle').text('Recent News for ' + companyName);
+					}
+					
+					$('#newsModal').modal('show');
+				}
+			},
+			complete: function (xhr, ts){
+				$('body').ploading({action: 'hide'});
+			}
+	    });
  	}
  	
   	$(document).ready(f_init);
@@ -78,7 +391,7 @@
         <div class="row align-items-center">
           
           <div class="col-11 col-xl-2">
-            <h1 class="mb-0 site-logo"><a href="index.html" class="text-black h2 mb-0">[[${appName}]]</a></h1>
+            <h1 class="mb-0 site-logo"><a href="index" class="text-black h2 mb-0">[[${appName}]]</a></h1>
           </div>
           <div class="col-12 col-md-10 d-none d-xl-block">
             <nav class="site-navigation position-relative text-right" role="navigation">
@@ -86,18 +399,8 @@
               <ul class="site-menu js-clone-nav mr-auto d-none d-lg-block">
                 <li><a href="index">Home</a></li>
                 <li class="active"><a href="stock">Stocks</a></li>
-                <li class="has-children">
-                  <a href="services.html">Services</a>
-                  <ul class="dropdown">
-                    <li><a href="services.html">Web Applications</a></li>
-                    <li><a href="services.html">WordPress Dev</a></li>
-                    <li><a href="services.html">Mobile Applications</a></li>
-                    <li><a href="services.html">eCommerce</a></li>
-                  </ul>
-                </li>
-                <li><a href="about.html">About</a></li>
-                <li><a href="blog.html">Blog</a></li>
-                <li><a href="contact.html">Contact</a></li>
+                <li><a href="about">About</a></li>
+                <li><a href="blog">Blog</a></li>
               </ul>
             </nav>
           </div>
@@ -122,7 +425,7 @@
                         
             <div class="row justify-content-center mb-4">
               <div class="col-md-8 text-center">
-                <h1>Apple Inc. (AAPL)</h1>
+                <h1 th:text="${companyName} + ' (' + ${stockId} + ')'">Apple Inc. (AAPL)</h1>
                 <p class="lead mb-5">Get Some Predictions</p>
               </div>
             </div>
@@ -135,106 +438,108 @@
     <section class="site-section" style="padding: 2em 0">
     	<div class="container">
 			<div class="row">
-				<div class="col-lg-4 col-sm-12 text-center" style="border-right: 2px solid #d3d3d3">
+				<div class="col-lg-3 col-sm-12 text-center" style="border-right: 2px solid #d3d3d3" data-aos="fade" data-aos-delay="200">
 					<div class="col-12 mt-4">
 						<h3>
-							<span th:text="${stockValue}">$185.65</span>
-							&nbsp;&nbsp;
-							<span th:text="${#numbers.formatDecimal(stockNet, 1, 2)} + '%'">24.2%</span>
-							<i class="fas" th:classappend="(${stockChange}>0) ? 'fa-arrow-up text-success' : 'fa-arrow-down text-danger'"></i>
+							<span th:text="'$'+${stockValue}" class="text-info">$185.65</span>
+							<span th:text="${#numbers.formatDecimal(stockNet, 1, 2)} + '%'" class="text-info">24.2%</span>
+							<i class="fas" style="font-size: 1rem" th:classappend="(${stockChange}>0) ? 'fa-arrow-up text-success' : 'fa-arrow-down text-danger'"></i>
 						</h3>
 					</div>
-					<div class="col-12 p-5 pl-8 pr-8">
+					<div class="col-12 p-3">
 						<div class="card shadow">
 							<div class="m-1">
 								<i class="fas fa-external-link-alt"></i>
-								&nbsp;&nbsp;&nbsp;&nbsp;Website
+								&nbsp;&nbsp;&nbsp;
+								<a id="website" target="_blank">Website</a>
 							</div>
 							<div class="m-1">
 								<i class="fas fa-chart-line"></i>
-								&nbsp;&nbsp;&nbsp;&nbsp;Nasdaq
+								&nbsp;&nbsp;&nbsp;
+								<a id="nasdaq_link" target="_blank">Nasdaq</a>
 							</div>
 							<div class="m-1">
 								<i class="fas fa-search"></i>
-								&nbsp;&nbsp;&nbsp;&nbsp;Explorer
+								&nbsp;&nbsp;&nbsp;
+								<a id="explorer_link" target="_blank">Explorer</a>
 							</div>
 						</div>
 					</div>
 				</div>
-				<div class="col-lg-8 col-sm-12 text-center">
+				<div class="col-lg-9 col-sm-12 text-center">
 					<div class="col-12" style="border-bottom: 2px solid #d3d3d3">
 						<h3>
 							Key Stock Data
 						</h3>
 					</div>
-					<div class="row col-12">
+					<div id="keyStockDataContainer" class="row col-12">
 						<div class="col-lg-6 col-sm-12 p-2">
-							<div class="card shadow table-responsive">
-								<table class="table table-sm table-borderless align-items-center table-flush table-hover mb-0">
+							<div class="card shadow table-responsive" data-aos="fade" data-aos-delay="400">
+								<table class="table table-sm table-borderless align-items-center table-flush table-hover mb-0 table-striped">
 									<tbody>
 										<tr>
 											<th>exchange:</th>
-											<td>Nasdaq Global Select</td>
+											<td id="keydata_exchange">Nasdaq Global Select</td>
 										</tr>
 										<tr>
 											<th>industry:</th>
-											<td>Computer Hardware</td>
+											<td id="keydata_industry">Computer Hardware</td>
 										</tr>
 										<tr>
 											<th>sector:</th>
-											<td>Technology</td>
+											<td id="keydata_sector">Technology</td>
 										</tr>
 										<tr>
 											<th>open:</th>
-											<td>184.85</td>
+											<td id="keydata_open">184.85</td>
 										</tr>
 										<tr>
 											<th>previous_close:</th>
-											<td>183.73</td>
+											<td id="keydata_previous_close">183.73</td>
 										</tr>
 										<tr>
 											<th>market_cap:</th>
-											<td>881.286B</td>
+											<td id="keydata_market_cap">881.286B</td>
 										</tr>
 										<tr>
 											<th>forward_dividend_yield:</th>
-											<td>2.92 (1.61%)</td>
+											<td id="keydata_forward_dividend_yield">2.92 (1.61%)</td>
 										</tr>
 		    						</tbody>
 								</table>
 							</div>
 						</div>
 						<div class="col-lg-6 col-sm-12 p-2">
-							<div class="card shadow table-responsive">
-								<table class="table table-sm table-borderless align-items-center table-flush table-hover mb-0">
+							<div class="card shadow table-responsive" data-aos="fade" data-aos-delay="600">
+								<table class="table table-sm table-borderless align-items-center table-flush table-hover mb-0 table-striped">
 									<tbody>
 										<tr>
 											<th>avg_volume:</th>
-											<td>34,603,278</td>
+											<td id="keydata_avg_volume">34,603,278</td>
 										</tr>
 										<tr>
 											<th>ex_dividend_date:</th>
-											<td>2019-02-08</td>
+											<td id="keydata_ex_dividend_date">2019-02-08</td>
 										</tr>
 										<tr>
 											<th>beta:</th>
-											<td>0.99</td>
+											<td id="keydata_beta">0.99</td>
 										</tr>
 										<tr>
 											<th>pe_ratio:</th>
-											<td>15.42</td>
+											<td id="keydata_pe_ratio">15.42</td>
 										</tr>
 										<tr>
 											<th>eps:</th>
-											<td>12.12</td>
+											<td id="keydata_eps">12.12</td>
 										</tr>
 										<tr>
 											<th>week_52_range:</th>
-											<td>142.00 - 233.47</td>
+											<td id="keydata_week_52_range">142.00 - 233.47</td>
 										</tr>
 										<tr>
 											<th>earnings_date:</th>
-											<td>Apr 29, 2019 - May 3, 2019</td>
+											<td id="keydata_earnings_date">Apr 29, 2019 - May 3, 2019</td>
 										</tr>
 		    						</tbody>
 								</table>
@@ -247,8 +552,9 @@
 		</div>
     </section>
 	
-	<section style="padding: 1em 0">
+	<section style="padding: 1em 0" data-aos="fade" data-aos-delay="800">
 		<div class="container">
+		<div class="card shadow">
 			<ul class="nav nav-tabs nav-fill" id="myTab" role="tablist">
 				<li class="nav-item">
 				  	<a class="nav-link active text-dark" id="home-tab" data-toggle="tab" href="#prediction" role="tab" aria-controls="prediction" aria-selected="true">Prediction</a>
@@ -264,14 +570,16 @@
 				<div class="tab-pane fade show active" id="prediction" role="tabpanel" aria-labelledby="prediction-tab">
 					<div class="container">
 						<div class="row text-center mt-3">
-							<div class="col-3"></div>
-							<div class="col-6">
+							<div class="col-4"></div>
+							<div class="col-4">
 								<form action="#">
 					                <div class="form-group row">
-					                  	<label class="col-form-label col-4">Default Datepicker</label>
-					                  	<div class="col-8 input-group">
-					                  		<input class="form-control datepicker" data-date-format="yyyy-mm-dd" placeholder="Choose a Date" type="text" value="">
-					                  		<div class="input-group-prepend">
+					                  	<div class="col-12 input-group date">
+					                  		<input id="predictDate" class="form-control" placeholder="Choose a Date" type="text" value="" required>
+					                  		<div class="invalid-feedback">
+									          Please Choose a Date
+									        </div>
+					                  		<div class="input-group-append input-group-addon">
 										    	<div class="input-group-text">
 										    		<i class="far fa-calendar-alt"></i>
 										    	</div>
@@ -280,13 +588,247 @@
 					                </div>
 				                </form>
 			                </div>
-			                <div class="col-3"></div>
+			                <div class="col-4 text-left pt-1">
+			                	<button type="button" class="btn btn-info" onclick="f_predict()">predict</button>
+			                </div>
+						</div>
+						
+						<div id="predictionSection" style="display:none">
+							<div class="text-center mt-3">
+								<h4>
+									Prediction Value of <span class="text-info">[[${stockId}]]</span> at <span id="predictDateLabel" class="text-info">date</span>
+								</h4>
+								<h1 class="text-primary">
+									<span id="lowPredictValue">$123</span>
+									～
+									<span id="highPredictValue">$123</span>
+								</h1>
+							</div>
+							
+							<div id="predictCanvasContainer" class="p-5">
+								<canvas id="predictCanvas" width="2" height="1"></canvas>
+								<script>
+									var ctx = document.getElementById('predictCanvas');
+									var myChart = new Chart(ctx, {
+									    type: 'line',
+									    data: {
+									        labels: ['Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+									        datasets: [{
+									            label: '# of Votes',
+									            data: [12, 19, 3, 5, 2, 3],
+									            backgroundColor: [
+									                'rgba(54, 162, 235, 0.2)',
+									                'rgba(255, 206, 86, 0.2)',
+									                'rgba(75, 192, 192, 0.2)',
+									                'rgba(153, 102, 255, 0.2)',
+									                'rgba(255, 159, 64, 0.2)'
+									            ],
+									            borderColor: [
+									                'rgba(54, 162, 235, 1)',
+									                'rgba(255, 206, 86, 1)',
+									                'rgba(75, 192, 192, 1)',
+									                'rgba(153, 102, 255, 1)',
+									                'rgba(255, 159, 64, 1)'
+									            ],
+									            borderWidth: 1
+									        }]
+									    },
+									    options: {
+									        scales: {
+									            yAxes: [{
+									                ticks: {
+									                    beginAtZero: true
+									                }
+									            }]
+									        }
+									    },
+										responsive: false
+									});
+									</script>
+							</div>
 						</div>
 					</div>
 				</div>
-				<div class="tab-pane fade" id="news" role="tabpanel" aria-labelledby="news-tab">456</div>
-				<div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="history-tab">789</div>
+				<div class="tab-pane fade" id="news" role="tabpanel" aria-labelledby="news-tab">
+					<div class="container">
+						<div class="col-12 mt-4" style="border-bottom: 2px solid #d3d3d3">
+							<h3>
+								Recent News
+							</h3>
+						</div>
+						<div id="recentNewsContainer" class="row">
+							<div class="col-lg-6 col-sm-12 pt-3 row">
+								<div class="col-1 text-right pr-0">
+									<i class="fas fa-caret-right text-info news-arrow"></i>
+								</div>
+								<div class="col-11">
+									<p class="mb-1">
+										<a href="#" target="_blank" class="text-secondary">
+											PM Update: Some showers this evening, then turning chilly later tonight through Tuesday
+										</a>
+									</p>
+									<p class="text-muted mb-0">
+										2019-03-25T20:45:45Z - The Washington Post
+									</p>
+								</div>
+							</div>
+							<div class="col-lg-6 col-sm-12 pt-3 row">
+								<div class="col-1 text-right pr-0">
+									<i class="fas fa-caret-right text-info news-arrow"></i>
+								</div>
+								<div class="col-11">
+									<p class="mb-1">
+										<a href="#" target="_blank" class="text-secondary">
+											PM Update: Some showers this evening, then turning chilly later tonight through Tuesday
+										</a>
+									</p>
+									<p class="text-muted mb-0">
+										2019-03-25T20:45:45Z - Reuters
+									</p>
+								</div>
+							</div>
+							<div class="col-lg-6 col-sm-12 pt-3 row">
+								<div class="col-1 text-right pr-0">
+									<i class="fas fa-caret-right text-info news-arrow"></i>
+								</div>
+								<div class="col-11">
+									<p class="mb-1">
+										<a href="#" target="_blank" class="text-secondary">
+											PM Update: Some showers this evening, then turning chilly later tonight through Tuesday
+										</a>
+									</p>
+									<p class="text-muted mb-0">
+										2019-03-25T20:45:45Z - The Washington Post
+									</p>
+								</div>
+							</div>
+							<div class="col-lg-6 col-sm-12 pt-5 row">
+								<div class="col-1 text-right pr-0">
+									<i class="fas fa-angle-double-right text-info news-arrow"></i>
+								</div>
+								<div class="col-11 text-center">
+									<button type="button" class="btn btn-outline-info" onclick="$('#newsModal').modal('show');">View More</button>
+								</div>
+							</div>
+						</div>
+						
+						<div class="col-12 mt-4" style="border-bottom: 2px solid #d3d3d3">
+							<h3>
+								Recent Social Media
+							</h3>
+						</div>
+						<div class="row">
+							<div class="col-lg-6 col-sm-12 pt-3 row">
+								<div class="col-1 text-right pr-0">
+									<i class="fab fa-twitter-square text-info social-icon"></i>
+								</div>
+								<div class="col-1 pl-1">
+									<i class="far fa-grin text-success social-avatar"></i>
+								</div>
+								<div class="col-10">
+									<div class="d-flex justify-content-between">
+										<p class="mb-1 font-weight-bold">
+											Alan Yan
+										</p>
+										<p class="text-muted">2019-03-25T20:45:45Z</p>
+									</div>
+									
+									<p class="font-weight-light">
+										Not a big problem. Comfortable. Sun a dog. Eat shit.
+									</p>
+								</div>
+							</div>
+							<div class="col-lg-6 col-sm-12 pt-3 row">
+								<div class="col-1 text-right pr-0">
+									<i class="fab fa-twitter-square text-info social-icon"></i>
+								</div>
+								<div class="col-1 pl-1">
+									<i class="far fa-grin-squint text-success social-avatar"></i>
+								</div>
+								<div class="col-10">
+									<div class="d-flex justify-content-between">
+										<p class="mb-1 font-weight-bold">
+											Alan Yan
+										</p>
+										<p class="text-muted">2019-03-25T20:45:45Z</p>
+									</div>
+									
+									<p class="font-weight-light">
+										Not a big problem. Comfortable. Sun a dog. Eat shit.
+									</p>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-lg-6 col-sm-12 pt-3 row">
+								<div class="col-1 text-right pr-0">
+									<i class="fab fa-twitter-square text-info social-icon"></i>
+								</div>
+								<div class="col-1 pl-1">
+									<i class="far fa-grin-squint-tears text-success social-avatar"></i>
+								</div>
+								<div class="col-10">
+									<div class="d-flex justify-content-between">
+										<p class="mb-1 font-weight-bold">
+											Alan Yan
+										</p>
+										<p class="text-muted">2019-03-25T20:45:45Z</p>
+									</div>
+									
+									<p class="font-weight-light">
+										Not a big problem. Comfortable. Sun a dog. Eat shit.
+									</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="history-tab">
+					<div class="container">
+						<div class="col-12 mt-4" style="border-bottom: 2px solid #d3d3d3">
+							<h3>
+								Historical Data for [[${stockId}]]
+							</h3>
+						</div>
+						<div class="row text-center mt-3">
+							<div class="col-lg-3 col-sm-0"></div>
+							<div class="col-lg-6 col-sm-10">
+								<form action="#">
+								<div class="input-daterange input-group" id="datepicker">
+								    <input id="historyFromDate" type="text" class="input-sm form-control" name="start" />
+								    <div class="input-group-append input-group-addon">
+								    	<div class="input-group-text">
+								    		to
+								    	</div>
+								    </div>
+								    <input id="historyToDate" type="text" class="input-sm form-control" name="end" />
+								</div>
+								</form>
+							</div>
+							<div class="col-lg-3 col-sm-2 text-left pt-1">
+			                	<button type="button" class="btn btn-info" onclick="">Get</button>
+			                </div>				
+						</div>
+						<div class="row p-5">
+							<div class="col-12">
+						    	<table id="historyTable" class="table table-striped table-bordered text-center">
+									<thead>
+							            <tr>
+							            	<th>Date</th>
+							                <th>Open</th>
+							                <th>Close</th>
+							                <th>High</th>
+							                <th>Low</th>
+							                <th>News</th>
+							            </tr>
+							        </thead>
+							    </table>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
+		</div>
 		</div>
 	</section>
 	
@@ -304,7 +846,46 @@
         </div>
       </div>
     </footer>
-  </div>
+    
+    <div class="modal fade" id="newsModal" tabindex="-1" role="dialog" aria-labelledby="newsModalTitle" aria-hidden="true">
+	  <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-xl" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header text-center">
+	        <h5 class="modal-title" id="newsModalTitle">Modal title</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body">
+			<div class="container">
+				<div class="timeline" id="newsModalTimeLineContainer">
+					<div class="row no-gutters justify-content-end justify-content-md-around align-items-start  timeline-nodes">
+						<div class="col-10 col-md-5 order-3 order-md-1 timeline-content">
+							<a href="#" class="media-1">
+								<h4 class="text-light">Timeline Heading</h4>
+								<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Saepe, eaque amet deleniti hic quas qui cumque delectus aliquid, eius quia quod, quae, aliquam aspernatur facilis. Minima quod corporis dignissimos porro.</p>
+								<div class="media-1-content">
+					            	<h2>Read Full Content</h2>
+					            </div>
+							</a>
+						</div>
+						
+						<div class="col-2 col-sm-1 px-md-3 order-2 timeline-image text-md-center">
+							<img src="images/newsources/cnn.png" class="img-fluid" alt="img">
+						</div>
+						<div class="col-10 col-md-5 order-1 order-md-3 py-3 timeline-date">
+							<time>2018-02-23</time>
+						</div>
+					</div>
+				</div>
+			</div>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
 
   <script src="js/jquery-migrate-3.0.1.min.js"></script>
   <script src="js/jquery-ui.js"></script>
@@ -315,9 +896,8 @@
   <script src="js/jquery.countdown.min.js"></script>
   <script src="js/jquery.magnific-popup.min.js"></script>
   <script src="js/aos.js"></script>
-  <script src="uikit/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+  <script src="uikit/bootstrap-datepicker-164/js/bootstrap-datepicker.js"></script>
   
   <script src="js/main.js"></script>
-    
   </body>
 </html>

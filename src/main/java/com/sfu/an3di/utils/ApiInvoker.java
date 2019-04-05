@@ -12,10 +12,18 @@ import java.util.Map;
 import javax.net.ssl.HttpsURLConnection;
 
 import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import com.sfu.an3di.ApplicationConfig;
+
+@Component
 public class ApiInvoker {
 	
-	private static ApiInvoker instance = null;
+	//private static ApiInvoker instance = null;
+	
+	@Autowired
+	private ApplicationConfig appConfig;
 	
 	private final String USER_AGENT = "Mozilla/5.0";
 	private Logger logger = CommonUtils.getLogger();
@@ -24,16 +32,9 @@ public class ApiInvoker {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public static ApiInvoker getInstance() {
-		if (instance == null) {
-			instance = new ApiInvoker();
-		}
-		return instance;
-	}
-	
 	public Map<String, String> getStockValue(String stockId) {
 		
-		String url = "https://api.unibit.ai/historicalstockprice/AAPL?range=1m&interval=1&AccessKey=demo";
+		String url = "https://api.unibit.ai/historicalstockprice/" + stockId + "?range=1m&interval=1&AccessKey=" + appConfig.getUnibitApiKey();
 		
 		String ret = "";
 		try {
@@ -70,6 +71,28 @@ public class ApiInvoker {
 		return stockValue;
 	}
 	
+	public Map<String, Object> getStockCompanyProfile(String stockId) {
+		
+		String url = "https://api.unibit.ai/companyprofile/" + stockId + "?AccessKey=" + appConfig.getUnibitApiKey();
+		
+		String ret = "";
+		try {
+			ret = this.sendGet(url);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		Map<String, Object> retMap = new HashMap<>();
+		
+		try {
+			retMap = CommonUtils.convertJsonStrToMap(ret);
+		}catch(Exception e) {
+		}
+		
+		return retMap;
+	}
+
 	// HTTP GET request
 	public String sendGet(String url) throws Exception {
 

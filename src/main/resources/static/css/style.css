@@ -106,7 +106,7 @@ td, tr {
 
 .form-control {
   height: 43px;
-  border-radius: 30px;
+  border-radius: 15px;
   font-family: "Quicksand", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; }
 
 /* 
@@ -132,7 +132,7 @@ td, tr {
   font-size: 2.5rem; }
   @media (min-width: 768px) {
     .site-section-heading {
-      font-size: 4rem; } }
+      font-size: 3rem; } }
   .site-section-heading:after {
     content: "";
     left: 0%;
@@ -1363,7 +1363,7 @@ td, tr {
 .text-muted {
   color: #ccc !important;
   font-size: 12px;
-  text-transform: uppercase; }
+}
 
 .how-it-work-item .number {
   width: 50px;

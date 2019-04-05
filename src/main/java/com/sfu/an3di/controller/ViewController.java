@@ -1,5 +1,8 @@
 package com.sfu.an3di.controller;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,6 +29,9 @@ public class ViewController {
 	@Autowired
 	private ApplicationConfig appConfig;
 	
+	@Autowired
+	private ApiInvoker apiInvoker;
+	
 	private Logger logger = CommonUtils.getLogger();
 
 	@GetMapping("/")
@@ -44,32 +50,38 @@ public class ViewController {
         return new ModelAndView("index");
     }
     
+    @GetMapping("/about")
+    public ModelAndView about(Model m) {
+    	logger.info("enter index");
+    	m.addAttribute("appName", appConfig.getAppName());
+    	
+        return new ModelAndView("about");
+    }
+    
     @GetMapping("/stock")
     public ModelAndView stock(Model m, @RequestParam(value="stockId", defaultValue="") String stockId) {
     	logger.info("enter stock");
-//    	List<Stock> selectedStockList = new ArrayList<>();
-//    	selectedStockList.add(new Stock("apple", "Apple Inc. Common Stock (AAPL)", "AAPL"));
-//    	selectedStockList.add(new Stock("amazon", "Amazon.com, Inc. Common Stock (AMZN)", "AMZN"));
-//    	selectedStockList.add(new Stock("alibaba", "Alibaba Group Holding Limited (BABA)", "BABA"));
-//    	selectedStockList.add(new Stock("cisco", "Cisco Systems, Inc. Common Stock Common Stock (CSCO)", "CSCO"));
-//    	selectedStockList.add(new Stock("ebay", " eBay Inc. Common Stock (EBAY)", "EBAY"));
-//    	selectedStockList.add(new Stock("facebook", "Facebook, Inc. Class A Common Stock Common Stock (FB)", "FB"));
-//    	selectedStockList.add(new Stock("google", "Alphabet Inc. Class A Common Stock (GOOGL)", "GOOGL"));
-//    	selectedStockList.add(new Stock("microsoft", "Microsoft Corporation Common Stock Common Stock (MSFT)", "MSFT"));
-//    	selectedStockList.add(new Stock("netflix", "Netflix, Inc. Common Stock Common Stock (NFLX)", "NFLX"));
-//    	selectedStockList.add(new Stock("tesla", "Tesla, Inc. Common Stock Common Stock (TSLA)", "TSLA"));
     	
     	if (!"".equals(stockId) && stockId!=null) {
     		
+    		//防止api call过多
+    		if ("demo".equals(appConfig.getUnibitApiKey())) {
+    			stockId = "AAPL";
+    		}
     		
-    		Map<String, String> stockValue = ApiInvoker.getInstance().getStockValue(stockId);
+    		Map<String, String> stockValue = apiInvoker.getStockValue(stockId);
+			Map<String, Object> companyProfile = apiInvoker.getStockCompanyProfile(stockId);
 			
 			m.addAttribute("appName", appConfig.getAppName());
+			m.addAttribute("unibitApiKey", appConfig.getUnibitApiKey());
+			m.addAttribute("stockId", stockId);
+			m.addAttribute("companyName", companyProfile.get("company_name"));
 			m.addAttribute("stockValue", Double.valueOf(stockValue.get("value")));
 			m.addAttribute("stockChange", Double.valueOf(stockValue.get("change")));
 			m.addAttribute("stockNet", Double.valueOf(stockValue.get("net"))*100);
 			
     		return new ModelAndView("stock_detail");
+    		
     	} else {
     		
     		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
@@ -79,7 +91,13 @@ public class ViewController {
     				continue;
     			}
     			
-    			Map<String, String> stockValue = ApiInvoker.getInstance().getStockValue(stock.getId());
+    			stockId = stock.getId();
+    			//防止api call过多
+        		if ("demo".equals(appConfig.getUnibitApiKey())) {
+        			stockId = "AAPL";
+        		}
+        		
+    			Map<String, String> stockValue = apiInvoker.getStockValue(stockId);
     			stock.setLastUpdateDate(today);
     			stock.setValue(Double.valueOf(stockValue.get("value")));
     			stock.setChange(Double.valueOf(stockValue.get("change")));
@@ -93,6 +111,7 @@ public class ViewController {
     		}
     		
     		m.addAttribute("appName", appConfig.getAppName());
+    		m.addAttribute("quandlApiKey", appConfig.getQuandlApiKey());
 	    	m.addAttribute("selectedStockList", CommonUtils.selectedStockList);
 	    	
 	        return new ModelAndView("stock_list");

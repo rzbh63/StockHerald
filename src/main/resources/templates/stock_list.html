@@ -22,6 +22,7 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
   	<link rel="stylesheet" href="css/p-loading.min.css" />
   	<link rel="stylesheet" href="css/spinkit.css" />
+  	<link rel="stylesheet" href="css/custom-typeahead.css" />
   	
   	<script src="js/jquery-3.3.1.min.js"></script>
   	<script src="js/moment.min.js"></script>
@@ -29,6 +30,7 @@
   	<script src="js/MyUtils.js"></script>
   	<script src="js/p-loading.min.js"></script>
   	<script src="js/pl-spinkit.js"></script>
+  	<script src="js/typeahead.bundle.js"></script>
   </head>
   <style>
   	.table-logo {
@@ -36,34 +38,89 @@
   		height: 50px;
   		border-radius: 30%;
   	}
+  	.stock-search input{
+  		border-top-left-radius: 15px !important;
+  		border-bottom-left-radius: 15px !important;
+  	}
+  	.stock-search button{
+  		height:43px;
+  		border-top-right-radius: 15px !important;
+  		border-bottom-right-radius: 15px !important;
+  	}
+  	span.twitter-typeahead .tt-menu,
+  	span.twitter-typeahead .tt-dropdown-menu {
+  		min-width: 350px !important
+  	}
   </style>
   
-  <script>
+  <script th:inline="javascript">
 	  var tmp = new Date();
 	  var endDate = f_formatDate(tmp);
 	  tmp.setDate(tmp.getDate()-14)
 	  var startDate = f_formatDate(tmp);
 	  
 	  var marketData = {};
+	  var quandlApiKey = [[${quandlApiKey}]];
   </script>
   
   <script>
  	function f_init(){
  		$.fn.ploading.defaults = {
 		    useAddOns: ['plspinkit'],//we are calling the pl-spinkit by default
-		    spinner: 'foldingCube', //we are defining the rotatingPlane spinner as default,
+		    spinner: 'skCircle', //we are defining the rotatingPlane spinner as default,
 		    maskColor: 'rgba(234, 234, 234, 0.8)' //Change the mask color background to white as the spinners colors is black
 		};
  		
- 		//f_getMarketData1();
- 	} 	
+ 		f_getMarketData1();
+ 		
+ 		//init typeahead input component
+ 		var stockSymbols = new Bloodhound({
+			datumTokenizer: Bloodhound.tokenizers.whitespace,
+			queryTokenizer: Bloodhound.tokenizers.whitespace,
+			prefetch: {
+				url: 'mockdata/stock-symbol.json',
+				cache: false
+			}
+		});
+		$('.typeahead').typeahead(null, {
+			name: 'stockSymbols',
+			source: stockSymbols,
+			limit: 7
+		});
+ 	}
+ 	
+ 	function f_searchStock(){
+ 		var searchStock = $("#search_stock_input").val();
+ 		if (!search_stock_input || search_stock_input == ""){
+ 			return;
+ 		}
+ 		var idx = searchStock.indexOf(" ");
+ 		if (idx > 0) {
+ 			searchStock = searchStock.substring(0, idx);
+ 		}
+ 		
+ 		$.getJSON("mockdata/stock-symbol-full.json", function(ret) {
+ 			var found = false;
+ 			for (var i=0; i<ret.length; i++){
+ 				if (searchStock == ret[i].stock_id){
+ 					found = true;
+ 					break;
+ 				}
+ 			}
+ 			if (found) {
+ 				window.location.href = '/stock?stockId=' + searchStock;
+ 			} else {
+ 				alert("No Such Stock");
+ 			}
+ 		});
+ 	}
  	
  	function f_getMarketData1(){
  		$('#nasdaqOverviewContainer').ploading({action: 'show'});
  		$('#nasdaqViewContainer').ploading({action: 'show'});
  		$.ajax({
 			type: 'GET',
-			url: 'https://www.quandl.com/api/v3/datasets/NASDAQOMX/COMP.json?api_key=1HkF7z1EegezVxzU8ZG-',
+			url: 'https://www.quandl.com/api/v3/datasets/NASDAQOMX/COMP.json?api_key=' + quandlApiKey,
 			data: {
 				start_date: startDate,
 				end_date: endDate
@@ -86,7 +143,7 @@
  	function f_getMarketData2(){
  		$.ajax({
 			type: 'GET',
-			url: 'https://www.quandl.com/api/v3/datasets/NASDAQOMX/NDX.json?api_key=1HkF7z1EegezVxzU8ZG-',
+			url: 'https://www.quandl.com/api/v3/datasets/NASDAQOMX/NDX.json?api_key=' + quandlApiKey,
 			data: {
 				start_date: startDate,
 				end_date: endDate
@@ -107,7 +164,7 @@
  	function f_getMarketData3(){
  		$.ajax({
 			type: 'GET',
-			url: 'https://www.quandl.com/api/v3/datasets/NASDAQOMX/QMI.json?api_key=1HkF7z1EegezVxzU8ZG-',
+			url: 'https://www.quandl.com/api/v3/datasets/NASDAQOMX/QMI.json?api_key=' + quandlApiKey,
 			data: {
 				start_date: startDate,
 				end_date: endDate
@@ -128,7 +185,7 @@
  	function f_getMarketData4(){
  		$.ajax({
 			type: 'GET',
-			url: 'https://www.quandl.com/api/v3/datasets/NASDAQOMX/QIV.json?api_key=1HkF7z1EegezVxzU8ZG-',
+			url: 'https://www.quandl.com/api/v3/datasets/NASDAQOMX/QIV.json?api_key=' + quandlApiKey,
 			data: {
 				start_date: startDate,
 				end_date: endDate
@@ -218,6 +275,7 @@
 		    }
 		});
  	}
+ 	
   	$(document).ready(f_init);
   </script>
   
@@ -248,18 +306,8 @@
               <ul class="site-menu js-clone-nav mr-auto d-none d-lg-block">
                 <li><a href="index">Home</a></li>
                 <li class="active"><a href="stock">Stocks</a></li>
-                <li class="has-children">
-                  <a href="services.html">Services</a>
-                  <ul class="dropdown">
-                    <li><a href="services.html">Web Applications</a></li>
-                    <li><a href="services.html">WordPress Dev</a></li>
-                    <li><a href="services.html">Mobile Applications</a></li>
-                    <li><a href="services.html">eCommerce</a></li>
-                  </ul>
-                </li>
-                <li><a href="about.html">About</a></li>
-                <li><a href="blog.html">Blog</a></li>
-                <li><a href="contact.html">Contact</a></li>
+                <li><a href="about">About</a></li>
+                <li><a href="blog">Blog</a></li>
               </ul>
             </nav>
           </div>
@@ -300,7 +348,8 @@
     
 		<div class="container">
 			<div class="row mb-5">
-			  <div class="col-xl-6 mb-5 mb-xl-0">
+			
+			  <div class="col-xl-6 mb-5 mb-xl-0" data-aos="fade" data-aos-delay="200">
 			    <div class="card shadow">
 			      <div class="card-header border-0">
 			        <div class="row align-items-center">
@@ -359,7 +408,7 @@
 			  </div>
 			</div>
 			
-			<div class="col-xl-6 mb-5 mb-xl-0">
+			<div class="col-xl-6 mb-5 mb-xl-0" data-aos="fade" data-aos-delay="500">
 			    <div class="card shadow">
 			      <div class="card-header border-0">
 			        <div class="row align-items-center">
@@ -379,9 +428,25 @@
 	<div class="container">
 	    <div class="row">
 	        <div class="col">
-	          <div class="card shadow">
+	          <div class="card shadow" data-aos="fade" data-aos-delay="700">
 	            <div class="card-header border-0">
-	              <h3 class="mb-0 text-center">Selected Stocks</h3>
+	            	<div class="row row justify-content-center">
+	            		<div class="col-lg-4 offset-lg-4 col-sm-12">
+	            			<h3 class="mb-0 text-center">Selected Stocks</h3>
+	            		</div>
+	            		<div class="col-lg-4 col-sm-6">
+		            		<form action="#">
+				                <div class="form-group row">
+				                  	<div class="col-12 input-group stock-search">
+				                  		<input id="search_stock_input" class="form-control typeahead" placeholder="Search Your Stock" type="text" value="" required>
+				                  		<div class="input-group-append">
+									    	<button type="button" class="btn btn-info" onclick="f_searchStock()"><i class="fas fa-search"></i></button>
+									    </div>
+				                  	</div>
+				                </div>
+			                </form>
+	            		</div>
+	            	</div>
 	            </div>
 	            <div class="table-responsive">
 	              <table class="table align-items-center text-center table-flush table-hover mb-0">
@@ -414,33 +479,6 @@
 	                </tbody>
 	              </table>
 	            </div>
-	            <!--*/ 
-	            <div class="card-footer py-4">
-	              <nav aria-label="...">
-	                <ul class="pagination justify-content-end mb-0">
-	                  <li class="page-item disabled">
-	                    <a class="page-link" href="#" tabindex="-1">
-	                      <i class="fas fa-angle-left"></i>
-	                      <span class="sr-only">Previous</span>
-	                    </a>
-	                  </li>
-	                  <li class="page-item active">
-	                    <a class="page-link" href="#">1</a>
-	                  </li>
-	                  <li class="page-item">
-	                    <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
-	                  </li>
-	                  <li class="page-item"><a class="page-link" href="#">3</a></li>
-	                  <li class="page-item">
-	                    <a class="page-link" href="#">
-	                      <i class="fas fa-angle-right"></i>
-	                      <span class="sr-only">Next</span>
-	                    </a>
-	                  </li>
-	                </ul>
-	              </nav>
-	            </div>
-	            /*-->
 	          </div>
 	        </div>
 	      </div>
