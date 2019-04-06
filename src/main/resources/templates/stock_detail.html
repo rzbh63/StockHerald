@@ -374,6 +374,14 @@
 	    });
  	}
  	
+ 	function f_reloadHistoryTable(){
+ 		var table = $('#historyTable').DataTable();
+ 		$("#history").ploading({action: 'show'});
+ 		url = "https://api.unibit.ai/historicalstockprice/" + stockId + "?range=" + $("#timeRange").val() + "&interval=1&AccessKey=" + unibitApiKey,
+		table.ajax.url(url).load(function(){
+			$("#history").ploading({action: 'hide'});
+		});
+ 	}
   	$(document).ready(f_init);
   </script>
   
@@ -779,6 +787,20 @@
 							</h3>
 						</div>
 						<div class="row text-center mt-3">
+							<div class="col-lg-4 col-sm-0"></div>
+							<div class="col-lg-4 col-sm-12">
+								<form class="form-inline">
+									<label class="my-1 mr-4" for="timeRange">Time Range</label>
+									<select class="custom-select my-1 mr-sm-2" id="timeRange" style="width:10rem;" onchange="f_reloadHistoryTable()">
+										<option value="1m">1 Month</option>
+										<option value="3m">3 Months</option>
+										<option value="1y">1 Year</option>
+										<option value="3y">3 Years</option>
+										<option value="5y">5 Years</option>
+									</select>
+								</form>
+							</div>
+							<!--*/ 
 							<div class="col-lg-3 col-sm-0"></div>
 							<div class="col-lg-6 col-sm-10">
 								<form action="#">
@@ -795,7 +817,8 @@
 							</div>
 							<div class="col-lg-3 col-sm-2 text-left pt-1">
 			                	<button type="button" class="btn btn-info" onclick="">Get</button>
-			                </div>				
+			                </div>
+			                */-->
 						</div>
 						<div class="row p-5">
 							<div class="col-12">
