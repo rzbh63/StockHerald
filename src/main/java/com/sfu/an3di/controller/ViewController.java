@@ -79,7 +79,7 @@ public class ViewController {
     			stockId = "AAPL";
     		}
     		
-    		Map<String, String> stockValue = apiInvoker.getStockValue(stockId);
+    		Map<String, String> stockValue = apiInvoker.getStockValueFromAlphaVantage(stockId);
 			Map<String, Object> companyProfile = apiInvoker.getStockCompanyProfile(stockId);
 			List<String>[] tweetUrlsArr = apiInvoker.getSearchedTweetUrls((String) companyProfile.get("company_name"));
 			List<String> allTweetUrls = tweetUrlsArr[0];
@@ -98,10 +98,11 @@ public class ViewController {
 			m.addAttribute("companyName", companyProfile.get("company_name"));
 			m.addAttribute("stockValue", Double.valueOf(stockValue.get("value")));
 			m.addAttribute("stockChange", Double.valueOf(stockValue.get("change")));
-			m.addAttribute("stockNet", Double.valueOf(stockValue.get("net"))*100);
+			m.addAttribute("stockNet", stockValue.get("net"));
+			//m.addAttribute("stockNet", Double.valueOf(stockValue.get("net"))*100);
+			m.addAttribute("stockHistoryData", apiInvoker.getHistoryStockDataFromAlphaVantage(stockId));
 			
     		return new ModelAndView("stock_detail");
-    		
     	} else {
     		
     		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
@@ -117,7 +118,7 @@ public class ViewController {
         			stockId = "AAPL";
         		}
         		
-    			Map<String, String> stockValue = apiInvoker.getStockValue(stockId);
+    			Map<String, String> stockValue = apiInvoker.getStockValueByHistoryFromUnibit(stockId);
     			stock.setLastUpdateDate(today);
     			stock.setValue(Double.valueOf(stockValue.get("value")));
     			stock.setChange(Double.valueOf(stockValue.get("change")));

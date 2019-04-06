@@ -42,17 +42,105 @@ public class ApiInvoker {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public Map<String, String> getStockValue(String stockId) {
+	public Map<String, String> getStockValueFromAlphaVantage(String stockId) {
 		
-		String url = "https://api.unibit.ai/historicalstockprice/" + stockId + "?range=1m&interval=1&AccessKey=" + appConfig.getUnibitApiKey();
+		String url = "https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=" + stockId + "&apikey=";
 		
 		String ret = "";
 		try {
-			ret = this.sendGet(url);
+			boolean allKeyFails = true;
+			for (String apikey : appConfig.getAlphaVantageApiKeys()) {
+				ret = this.sendGet(url + apikey);
+				HashMap<String, Object> retMap = CommonUtils.convertJsonStrToMap(ret);
+				if (retMap.get("Global Quote") == null) {
+					continue;
+				} else {
+					allKeyFails = false;
+					break;
+				}
+			}
+			
+			if (allKeyFails) {
+				url = "https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=MSFT&apikey=demo";
+				ret = this.sendGet(url);
+			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		Map<String, String> stockValue = new HashMap<>();
+		
+		try {
+			HashMap<String, Object> retMap = CommonUtils.convertJsonStrToMap(ret);
+			Map<String, Object> quote = (Map) retMap.get("Global Quote");
+			
+			stockValue.put("date", quote.get("07. latest trading day").toString());
+			stockValue.put("value", quote.get("05. price").toString());
+			stockValue.put("change", quote.get("09. change").toString());
+			stockValue.put("net", quote.get("10. change percent").toString());
+		}catch(Exception e) {
+			stockValue.put("date", "");
+			stockValue.put("value", "0");
+			stockValue.put("change", "0");
+			stockValue.put("net", "0");
+		}
+		
+		return stockValue;
+	}
+	
+	public Map<String, Object> getHistoryStockDataFromAlphaVantage(String stockId) {
+		String url = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=" + stockId + "&outputsize=full&apikey=";
+		String ret = "";
+		try {
+			boolean allKeyFails = true;
+			for (String apikey : appConfig.getAlphaVantageApiKeys()) {
+				ret = this.sendGet(url + apikey);
+				HashMap<String, Object> retMap = CommonUtils.convertJsonStrToMap(ret);
+				if (retMap.get("Time Series (Daily)") == null) {
+					continue;
+				} else {
+					allKeyFails = false;
+					break;
+				}
+			}
+			
+			if (allKeyFails) {
+				url = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=MSFT&apikey=demo";
+				ret = this.sendGet(url);
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		HashMap<String, Object> retMap = new HashMap<>();
+		try {
+			retMap = CommonUtils.convertJsonStrToMap(ret);
+		}catch(Exception e) {}
+		
+		return retMap;
+	}
+	
+	public Map<String, String> getStockValueByHistoryFromUnibit(String stockId) {
+		
+		String ret = "";
+		int maxTryTimes = 5;
+		int triedTimes = 0;
+		boolean needChangeApi = false;
+		do {
+			triedTimes++;
+			String url = "https://api.unibit.ai/historicalstockprice/" + stockId + "?range=1m&interval=1&AccessKey=" + appConfig.getUnibitApiKey();
+			try {
+				ret = this.sendGet(url);
+				needChangeApi = false;
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				needChangeApi = true;
+				appConfig.changeUnibitApiKey();
+			}
+		}while(needChangeApi && triedTimes<maxTryTimes);
 		
 		Map<String, String> stockValue = new HashMap<>();
 		
@@ -83,15 +171,23 @@ public class ApiInvoker {
 	
 	public Map<String, Object> getStockCompanyProfile(String stockId) {
 		
-		String url = "https://api.unibit.ai/companyprofile/" + stockId + "?AccessKey=" + appConfig.getUnibitApiKey();
-		
 		String ret = "";
-		try {
-			ret = this.sendGet(url);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		int maxTryTimes = 5;
+		int triedTimes = 0;
+		boolean needChangeApi = false;
+		do {
+			triedTimes++;
+			String url = "https://api.unibit.ai/companyprofile/" + stockId + "?AccessKey=" + appConfig.getUnibitApiKey();
+			try {
+				ret = this.sendGet(url);
+				needChangeApi = false;
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				needChangeApi = true;
+				appConfig.changeUnibitApiKey();
+			}
+		}while(needChangeApi && triedTimes<maxTryTimes);
 		
 		Map<String, Object> retMap = new HashMap<>();
 		
