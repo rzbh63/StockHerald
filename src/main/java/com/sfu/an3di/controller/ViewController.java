@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +23,15 @@ import com.sfu.an3di.ApplicationConfig;
 import com.sfu.an3di.pojo.Stock;
 import com.sfu.an3di.utils.ApiInvoker;
 import com.sfu.an3di.utils.CommonUtils;
+
+import twitter4j.Query;
+import twitter4j.QueryResult;
+import twitter4j.Status;
+import twitter4j.Twitter;
+import twitter4j.TwitterException;
+import twitter4j.TwitterFactory;
+import twitter4j.URLEntity;
+import twitter4j.conf.ConfigurationBuilder;
 
 @RestController
 public class ViewController {
@@ -71,10 +81,20 @@ public class ViewController {
     		
     		Map<String, String> stockValue = apiInvoker.getStockValue(stockId);
 			Map<String, Object> companyProfile = apiInvoker.getStockCompanyProfile(stockId);
+			List<String>[] tweetUrlsArr = apiInvoker.getSearchedTweetUrls((String) companyProfile.get("company_name"));
+			List<String> allTweetUrls = tweetUrlsArr[0];
+			List<String> allSortedTweetUrls = tweetUrlsArr[1];
 			
+			List<String> tweetUrls = new ArrayList<>();
+			for (int i=0; i<5 && i<allSortedTweetUrls.size(); i++) {
+				tweetUrls.add(allSortedTweetUrls.get(i));
+			}
 			m.addAttribute("appName", appConfig.getAppName());
 			m.addAttribute("unibitApiKey", appConfig.getUnibitApiKey());
 			m.addAttribute("stockId", stockId);
+			m.addAttribute("tweetsNum", allTweetUrls.size());
+			m.addAttribute("tweetUrls", tweetUrls);
+			m.addAttribute("allTweetUrls", allTweetUrls);
 			m.addAttribute("companyName", companyProfile.get("company_name"));
 			m.addAttribute("stockValue", Double.valueOf(stockValue.get("value")));
 			m.addAttribute("stockChange", Double.valueOf(stockValue.get("change")));

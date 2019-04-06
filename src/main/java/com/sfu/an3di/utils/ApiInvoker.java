@@ -5,6 +5,9 @@ import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +19,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.sfu.an3di.ApplicationConfig;
+
+import twitter4j.Query;
+import twitter4j.QueryResult;
+import twitter4j.Status;
+import twitter4j.Twitter;
+import twitter4j.TwitterException;
+import twitter4j.TwitterFactory;
 
 @Component
 public class ApiInvoker {
@@ -93,6 +103,62 @@ public class ApiInvoker {
 		return retMap;
 	}
 
+	public List<String>[] getSearchedTweetUrls(String queryStr){
+		Twitter twitter = new TwitterFactory(appConfig.getTwitterConfig()).getInstance();
+		List<String> tweetUrls = new ArrayList<>();
+		List<String> sortedTweetUrls = new ArrayList<>();
+		List<String>[] ret = new List[2];
+		
+        try {
+            Query query = new Query(queryStr);
+        	query.setLang("en");
+        	query.setCount(50);
+        	query.setResultType(Query.MIXED);
+            QueryResult result;
+            //do {
+                result = twitter.search(query);
+                List<Status> tweets = result.getTweets();
+                List<Status> sortedTweets = new ArrayList<>(tweets);
+                //Collections.copy(sortedTweets, tweets);
+                
+                Comparator<Status> comp = new Comparator<Status>(){
+                    @Override
+                    public int compare(Status s1, Status s2)
+                    {
+                        return s1.getText().length() - s2.getText().length();
+                    }        
+                };
+                sortedTweets.sort(comp);
+                
+                for (Status tweet : tweets) {
+                	StringBuilder sb = new StringBuilder();
+                	sb.append("https://twitter.com/");
+                	sb.append(tweet.getUser().getId());
+                	sb.append("/status/");
+                	sb.append(tweet.getId());
+                	sb.append("?ref_src=twsrc%5Etfw");
+                	tweetUrls.add(sb.toString());
+                }
+                for (Status tweet : sortedTweets) {
+                	StringBuilder sb = new StringBuilder();
+                	sb.append("https://twitter.com/");
+                	sb.append(tweet.getUser().getId());
+                	sb.append("/status/");
+                	sb.append(tweet.getId());
+                	sb.append("?ref_src=twsrc%5Etfw");
+                	sortedTweetUrls.add(sb.toString());
+                }
+                ret[0] = tweetUrls;
+                ret[1] = sortedTweetUrls;
+            //} while ((query = result.nextQuery()) != null);
+        } catch (TwitterException te) {
+            te.printStackTrace();
+            logger.error("Failed to search tweets: " + te.getMessage());
+        }
+        
+        return ret;
+	}
+	
 	// HTTP GET request
 	public String sendGet(String url) throws Exception {
 
