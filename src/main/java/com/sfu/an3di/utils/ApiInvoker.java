@@ -48,7 +48,7 @@ public class ApiInvoker {
 		String ret = "";
 		try {
 			boolean allKeyFails = true;
-			for (String apikey : appConfig.getAlphaVantageApiKeys()) {
+			for (String apikey : appConfig.getAlphaVantageApiKeySet()) {
 				ret = this.sendGet(url + apikey);
 				HashMap<String, Object> retMap = CommonUtils.convertJsonStrToMap(ret);
 				if (retMap.get("Global Quote") == null) {
@@ -93,7 +93,7 @@ public class ApiInvoker {
 		String ret = "";
 		try {
 			boolean allKeyFails = true;
-			for (String apikey : appConfig.getAlphaVantageApiKeys()) {
+			for (String apikey : appConfig.getAlphaVantageApiKeySet()) {
 				ret = this.sendGet(url + apikey);
 				HashMap<String, Object> retMap = CommonUtils.convertJsonStrToMap(ret);
 				if (retMap.get("Time Series (Daily)") == null) {
@@ -124,22 +124,33 @@ public class ApiInvoker {
 	public Map<String, String> getStockValueByHistoryFromUnibit(String stockId) {
 		
 		String ret = "";
-		int maxTryTimes = 5;
-		int triedTimes = 0;
-		boolean needChangeApi = false;
-		do {
-			triedTimes++;
-			String url = "https://api.unibit.ai/historicalstockprice/" + stockId + "?range=1m&interval=1&AccessKey=" + appConfig.getUnibitApiKey();
+		int idx=0;
+		boolean allKeyFails = true;
+		for (String apikey : appConfig.getUnibitApiKeySet()) {
+			String url = "https://api.unibit.ai/historicalstockprice/" + stockId + "?range=1m&interval=1&AccessKey=" + apikey;
 			try {
 				ret = this.sendGet(url);
-				needChangeApi = false;
+				appConfig.setAvailableUnibitApiKeyIndex(idx);
+				allKeyFails = false;
+				break;
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-				needChangeApi = true;
-				appConfig.changeUnibitApiKey();
 			}
-		}while(needChangeApi && triedTimes<maxTryTimes);
+			idx++;
+		}
+		
+		if (allKeyFails) {
+			String url = "https://api.unibit.ai/historicalstockprice/AAPL?range=1m&interval=1&AccessKey=demo";
+			appConfig.setAvailableUnibitApiKeyIndex(-1);
+			try {
+				ret = this.sendGet(url);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
 		
 		Map<String, String> stockValue = new HashMap<>();
 		
@@ -171,22 +182,32 @@ public class ApiInvoker {
 	public Map<String, Object> getStockCompanyProfile(String stockId) {
 		
 		String ret = "";
-		int maxTryTimes = 5;
-		int triedTimes = 0;
-		boolean needChangeApi = false;
-		do {
-			triedTimes++;
-			String url = "https://api.unibit.ai/companyprofile/" + stockId + "?AccessKey=" + appConfig.getUnibitApiKey();
+		int idx=0;
+		boolean allKeyFails = true;
+		for (String apikey : appConfig.getUnibitApiKeySet()) {
+			String url = "https://api.unibit.ai/companyprofile/" + stockId + "?AccessKey=" + apikey;
 			try {
 				ret = this.sendGet(url);
-				needChangeApi = false;
+				appConfig.setAvailableUnibitApiKeyIndex(idx);
+				allKeyFails = false;
+				break;
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-				needChangeApi = true;
-				appConfig.changeUnibitApiKey();
 			}
-		}while(needChangeApi && triedTimes<maxTryTimes);
+			idx++;
+		}
+		
+		if (allKeyFails) {
+			String url = "https://api.unibit.ai/companyprofile/AAPL?AccessKey=demo";
+			appConfig.setAvailableUnibitApiKeyIndex(-1);
+			try {
+				ret = this.sendGet(url);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		
 		Map<String, Object> retMap = new HashMap<>();
 		
@@ -231,7 +252,8 @@ public class ApiInvoker {
                 	sb.append(tweet.getUser().getId());
                 	sb.append("/status/");
                 	sb.append(tweet.getId());
-                	sb.append("?ref_src=twsrc%5Etfw");
+                	sb.append("?ref_src=");
+                	sb.append(appConfig.getTwitterRefSource());
                 	tweetUrls.add(sb.toString());
                 }
                 for (Status tweet : sortedTweets) {
@@ -240,7 +262,8 @@ public class ApiInvoker {
                 	sb.append(tweet.getUser().getId());
                 	sb.append("/status/");
                 	sb.append(tweet.getId());
-                	sb.append("?ref_src=twsrc%5Etfw");
+                	sb.append("?ref_src=");
+                	sb.append(appConfig.getTwitterRefSource());
                 	sortedTweetUrls.add(sb.toString());
                 }
                 ret[0] = tweetUrls;
