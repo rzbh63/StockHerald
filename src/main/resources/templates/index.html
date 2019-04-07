@@ -21,6 +21,8 @@
     <link rel="stylesheet" href="css/style.css">
     
     <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/jquery.vide.min.js"></script>
+    
   </head>
   <style>
   	.header_area {
@@ -80,21 +82,25 @@
     </div>
    
     <header class="site-navbar py-4 bg-white header_area" role="banner">
-
       <div class="container">
         <div class="row align-items-center">
           
-          <div class="col-11 col-xl-2">
-            <h1 class="mb-0 site-logo"><a href="index.html" class="text-black h2 mb-0">[[${appName}]]</a></h1>
+          <div class="col-11 col-xl-4 row">
+          	<div class="col-3">
+            	 <img src="images/cute_bat.png" alt="Image" class="img-fluid rounded" style="height:3rem;">
+            </div>
+          	<div class="col-9 pl-0">
+            	<h1 class="mb-0 site-logo"><a href="index" class="text-black h2 mb-0">[[${appName}]]</a></h1>
+            </div>
           </div>
-          <div class="col-12 col-md-10 d-none d-xl-block">
+          <div class="col-12 col-md-8 d-none d-xl-block">
             <nav class="site-navigation position-relative text-right" role="navigation">
 
               <ul class="site-menu js-clone-nav mr-auto d-none d-lg-block">
                 <li class="active"><a href="index">Home</a></li>
                 <li><a href="stock">Stocks</a></li>
                 <li><a href="about">About</a></li>
-                <li><a href="blog">Blog</a></li>
+                <li><a href="https://medium.com/sfu-big-data/interview-with-big-data-alumni-659373a53ad0" target="_blank">Blog</a></li>
               </ul>
             </nav>
           </div>
@@ -106,12 +112,11 @@
 
         </div>
       </div>
-      
     </header>
 
   
 
-    <div class="site-blocks-cover overlay" style="background-image: url(images/hero_1.jpg);" data-aos="fade" data-stellar-background-ratio="0.5">
+    <div class="site-blocks-cover overlay" data-vide-bg="images/bgvideo" data-aos="fade" data-stellar-background-ratio="0.5">
       <div class="container">
         <div class="row align-items-center justify-content-center text-center">
 
@@ -120,7 +125,7 @@
             <div class="row justify-content-center mb-4">
               <div class="col-md-10 text-center">
                 <h1>We Are Herald <span class="typed-words"></span></h1>
-                <p class="lead mb-5">We do prediction</p>
+                <p class="lead mb-5"></p>
                 <div><a href="stock" class="btn btn-info btn-md">Predict Now</a></div>
               </div>
             </div>
@@ -171,7 +176,7 @@
       <div class="container-fluid">
         <div id="poweredBy" class="row">
           <div class="col-md-6 col-lg-3" data-aos="fade" data-aos-delay="100">
-            <a href="#" class="media-1">
+            <a href="https://spring.io" target="_blank" class="media-1">
               <img src="images/poweredby/springboot.png" alt="Image" class="img-fluid">
               <div class="media-1-content">
                 <h2>Sprint Boot</h2>
@@ -180,7 +185,7 @@
             </a>
           </div>
           <div class="col-md-6 col-lg-3" data-aos="fade" data-aos-delay="200">
-            <a href="#" class="media-1">
+            <a href="https://getbootstrap.com" target="_blank" class="media-1">
               <img src="images/poweredby/bootstrap.jpg" alt="Image" class="img-fluid">
               <div class="media-1-content">
                 <h2>Bootstrap 4</h2>
@@ -189,7 +194,7 @@
             </a>
           </div>
           <div class="col-md-6 col-lg-3" data-aos="fade" data-aos-delay="300">
-            <a href="#" class="media-1">
+            <a href="https://www.chartjs.org" target="_blank" class="media-1">
               <img src="images/poweredby/chartjs.jpg" alt="Image" class="img-fluid">
               <div class="media-1-content">
                 <h2>Chart.js</h2>
@@ -198,7 +203,7 @@
             </a>
           </div>
           <div class="col-md-6 col-lg-3" data-aos="fade" data-aos-delay="400">
-            <a href="#" class="media-1">
+            <a href="https://www.highcharts.com" target="_blank" class="media-1">
               <img src="images/poweredby/highcharts.jpg" alt="Image" class="img-fluid">
               <div class="media-1-content">
                 <h2>Highcharts</h2>
@@ -207,7 +212,7 @@
             </a>
           </div>
           <div class="col-md-6 col-lg-3" data-aos="fade" data-aos-delay="100">
-            <a href="#" class="media-1">
+            <a href="https://www.alphavantage.co/#page-top" target="_blank" class="media-1">
               <img src="images/poweredby/alphavantage.png" alt="Image" class="img-fluid">
               <div class="media-1-content">
                 <h2>Alpha Avantage</h2>
@@ -216,7 +221,7 @@
             </a>
           </div>
           <div class="col-md-6 col-lg-3" data-aos="fade" data-aos-delay="200">
-            <a href="#" class="media-1">
+            <a href="https://www.quandl.com" target="_blank" class="media-1">
               <img src="images/poweredby/quandl.png" alt="Image" class="img-fluid">
               <div class="media-1-content">
                 <h2>Quandl</h2>
@@ -225,7 +230,7 @@
             </a>
           </div>
           <div class="col-md-6 col-lg-3" data-aos="fade" data-aos-delay="300">
-            <a href="#" class="media-1">
+            <a href="https://twitter.com" target="_blank" class="media-1">
               <img src="images/poweredby/twitter-2.png" alt="Image" class="img-fluid">
               <div class="media-1-content">
                 <h2>Twitter</h2>
@@ -234,7 +239,7 @@
             </a>
           </div>
           <div class="col-md-6 col-lg-3" data-aos="fade" data-aos-delay="400">
-            <a href="#" class="media-1">
+            <a href="https://unibit.ai/product" target="_blank" class="media-1">
               <img src="images/poweredby/unibit.png" alt="Image" class="img-fluid">
               <div class="media-1-content">
                 <h2>Unibit</h2>
@@ -243,7 +248,7 @@
             </a>
           </div>
           <div class="col-md-6 col-lg-3" data-aos="fade" data-aos-delay="100">
-            <a href="#" class="media-1">
+            <a href="https://www.tensorflow.org" target="_blank" class="media-1">
               <img src="images/poweredby/tensorflow.jpg" alt="Image" class="img-fluid">
               <div class="media-1-content">
                 <h2>TensorFlow</h2>
@@ -252,7 +257,7 @@
             </a>
           </div>
           <div class="col-md-6 col-lg-3" data-aos="fade" data-aos-delay="200">
-            <a href="#" class="media-1">
+            <a href="https://keras.io" target="_blank" class="media-1">
               <img src="images/poweredby/keras.png" alt="Image" class="img-fluid">
               <div class="media-1-content">
                 <h2>Keras</h2>
@@ -261,7 +266,7 @@
             </a>
           </div>
           <div class="col-md-6 col-lg-3" data-aos="fade" data-aos-delay="300">
-            <a href="#" class="media-1">
+            <a href="https://radimrehurek.com/gensim/" target="_blank" class="media-1">
               <img src="images/poweredby/gensim.png" alt="Image" class="img-fluid">
               <div class="media-1-content">
                 <h2>Gensim</h2>
@@ -270,7 +275,7 @@
             </a>
           </div>
           <div class="col-md-6 col-lg-3" data-aos="fade" data-aos-delay="400">
-            <a href="#" class="media-1">
+            <a href="https://www.crummy.com/software/BeautifulSoup/" target="_blank" class="media-1">
               <img src="images/poweredby/beautifulsoup.jpg" alt="Image" class="img-fluid">
               <div class="media-1-content">
                 <h2>Beautiful Soup</h2>
@@ -289,7 +294,7 @@
             <h4 class="text-black h4 site-section-heading text-center" data-aos="fade">Our Team</h4>
         </div>
         <div class="row">
-       	  <div class="col-md-6 col-lg-3 mb-5 mb-lg-0" data-aos="fade" data-aos-delay="100">
+       	  <div class="col-md-6 col-lg-3 mb-5 mb-lg-0" data-aos="fade-right" data-aos-delay="100">
             <div class="person text-center">
               <img src="images/avatars/captain.jpg" alt="Image" class="img-fluid rounded-circle w-75 mb-5">
               <h2>Alan Yan</h2>
@@ -304,7 +309,7 @@
               </ul>
             </div>
           </div>
-          <div class="col-md-6 col-lg-3 mb-5 mb-lg-0" data-aos="fade" data-aos-delay="300">
+          <div class="col-md-6 col-lg-3 mb-5 mb-lg-0" data-aos="fade-right" data-aos-delay="300">
             <div class="person text-center">
               <img src="images/avatars/groot.jpg" alt="Image" class="img-fluid rounded-circle w-75 mb-5">
               <h2>Anton Ma</h2>
@@ -319,7 +324,7 @@
               </ul>
             </div>
           </div>
-          <div class="col-md-6 col-lg-3 mb-5 mb-lg-0" data-aos="fade" data-aos-delay="500">
+          <div class="col-md-6 col-lg-3 mb-5 mb-lg-0" data-aos="fade-left" data-aos-delay="500">
             <div class="person text-center">
               <img src="images/avatars/superwoman.jpg" alt="Image" class="img-fluid rounded-circle w-75 mb-5">
               <h2>Denise Chen</h2>
@@ -334,7 +339,7 @@
               </ul>
             </div>
           </div>
-          <div class="col-md-6 col-lg-3 mb-5 mb-lg-0" data-aos="fade" data-aos-delay="700">
+          <div class="col-md-6 col-lg-3 mb-5 mb-lg-0" data-aos="fade-left" data-aos-delay="700">
             <div class="person text-center">
               <img src="images/avatars/scarletwitch.jpg" alt="Image" class="img-fluid rounded-circle w-75 mb-5">
               <h2>Angel Zhang</h2>
