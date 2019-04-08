@@ -91,6 +91,7 @@ public class ViewController {
 			}
 			m.addAttribute("appName", appConfig.getAppName());
 			m.addAttribute("unibitApiKey", appConfig.getUnibitApiKey());
+			m.addAttribute("newsApiKey", appConfig.getNewsApiKey());
 			m.addAttribute("stockId", stockId);
 			m.addAttribute("tweetsNum", allTweetUrls.size());
 			m.addAttribute("tweetUrls", tweetUrls);
@@ -100,7 +101,7 @@ public class ViewController {
 			m.addAttribute("stockChange", Double.valueOf(stockValue.get("change")));
 			m.addAttribute("stockNet", stockValue.get("net"));
 			//m.addAttribute("stockNet", Double.valueOf(stockValue.get("net"))*100);
-			m.addAttribute("stockHistoryData", apiInvoker.getHistoryStockDataFromAlphaVantage(stockId));
+			m.addAttribute("stockHistoryData", apiInvoker.getHistoryStockDataFromAlphaVantage(stockId, "full"));
 			
     		return new ModelAndView("stock_detail");
     	} else {

@@ -5,6 +5,9 @@ import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -39,6 +42,34 @@ public class ApiInvoker {
 	
 	private ApiInvoker() {
 		// TODO Auto-generated constructor stub
+	}
+	
+	public Map<String, Object> getRecentNews(String stockId, String companyName, String fromDate, String toDate) {
+		
+		StringBuilder url = new StringBuilder();
+		url.append("https://newsapi.org/v2/everything?");
+		try {
+			url.append("q=" + URLEncoder.encode(companyName, "UTF-8"));
+		}catch(Exception e) {}
+		url.append("&sources=bloomberg,the-wall-street-journal,cnn,reuters,the-washington-post,bbc-news");
+		url.append("&from=" + fromDate);
+		url.append("&to=" + toDate);
+		url.append("&language=en");
+		url.append("&sortBy=publishedAt");
+		url.append("&pageSize=100&page=1");
+		url.append("&apiKey=" + appConfig.getNewsApiKey());
+		
+		String ret = "";
+		Map<String, Object> retMap = new HashMap<>();
+		try {
+			ret = this.sendGet(url.toString());
+			retMap = CommonUtils.convertJsonStrToMap(ret);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return retMap;
 	}
 	
 	public Map<String, String> getStockValueFromAlphaVantage(String stockId) {
@@ -88,8 +119,8 @@ public class ApiInvoker {
 		return stockValue;
 	}
 	
-	public Map<String, Object> getHistoryStockDataFromAlphaVantage(String stockId) {
-		String url = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=" + stockId + "&outputsize=full&apikey=";
+	public Map<String, Object> getHistoryStockDataFromAlphaVantage(String stockId, String outputsize) {
+		String url = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=" + stockId + "&outputsize=" + outputsize + "&apikey=";
 		String ret = "";
 		try {
 			boolean allKeyFails = true;

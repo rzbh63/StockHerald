@@ -13,6 +13,9 @@ public class ApplicationConfig {
 	@Value("${app.name:test}")
     private String appName;
 	
+	@Value("${model.script.path}")
+	private String modelScriptPath;
+	
 	@Value("${unibit.apikey}")
 	private String[] unibitApiKeySet;
 	
@@ -23,6 +26,9 @@ public class ApplicationConfig {
 	
 	@Value("${quandl.apikey:demo}")
     private String quandlApiKey;
+	
+	@Value("${newsapi.apikey:demo}")
+	private String newsApiKey;
 	
 	@Value("${oauth.consumerKey:demo}")
     private String twitterConsumerKey;
@@ -45,6 +51,10 @@ public class ApplicationConfig {
     	return this.appName;
     }
 	
+	public String getModelScriptPath() {
+		return this.modelScriptPath;
+	}
+	
 	public String[] getUnibitApiKeySet() {
 		return this.unibitApiKeySet;
 	}
@@ -63,6 +73,10 @@ public class ApplicationConfig {
 	
 	public String getQuandlApiKey() {
 		return this.quandlApiKey;
+	}
+	
+	public String getNewsApiKey() {
+		return this.newsApiKey;
 	}
 	
 	public String[] getAlphaVantageApiKeySet() {
