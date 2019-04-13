@@ -6,8 +6,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -136,7 +134,7 @@ public class ApiInvoker {
 			}
 			
 			if (allKeyFails) {
-				url = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=MSFT&apikey=demo";
+				url = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=MSFT&outputsize=full&apikey=demo";
 				ret = this.sendGet(url);
 			}
 		} catch (Exception e) {
@@ -316,8 +314,8 @@ public class ApiInvoker {
 
 		// optional default is GET
 		con.setRequestMethod("GET");
-		con.setReadTimeout(5000);
-		con.setConnectTimeout(5000);
+		con.setReadTimeout(8000);
+		con.setConnectTimeout(8000);
 		
 		//add request header
 		con.setRequestProperty("User-Agent", USER_AGENT);

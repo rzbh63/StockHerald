@@ -1,14 +1,10 @@
 package com.sfu.an3di.controller;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -28,6 +24,10 @@ import com.sfu.an3di.ApplicationConfig;
 import com.sfu.an3di.utils.ApiInvoker;
 import com.sfu.an3di.utils.CommonUtils;
 
+import yahoofinance.YahooFinance;
+import yahoofinance.quotes.stock.StockQuote;
+import yahoofinance.quotes.stock.StockStats;
+
 @RestController
 public class AjaxController {
 	
@@ -38,6 +38,43 @@ public class AjaxController {
 	private ApiInvoker apiInvoker;
 	
 	private Logger logger = CommonUtils.getLogger();
+	
+	@RequestMapping("/stockKeyData")
+    public Map<String, Object> stockKeyData(Model m, 
+    							@RequestParam(value = "stockId", defaultValue = "") String stockId) throws Exception {
+		
+		Map<String, Object> retMap = new HashMap<>();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		
+		try {
+			yahoofinance.Stock stock = YahooFinance.get(stockId);
+			StockQuote quote = stock.getQuote();
+			retMap.put("Exchange", stock.getStockExchange());
+			retMap.put("Currency", stock.getCurrency());
+			retMap.put("Price", quote.getPrice());
+			retMap.put("Open", quote.getOpen());
+			retMap.put("Previous_Close", quote.getPreviousClose());
+			retMap.put("Ask", quote.getAsk());
+			retMap.put("Bid", quote.getBid());
+			retMap.put("AVG_Volume", quote.getAvgVolume());
+			
+			StockStats stat = stock.getStats();
+			retMap.put("EPS", stat.getEps());
+			retMap.put("PE_Ratio", stat.getPe());
+			//retMap.put("Market_Cap", stat.getMarketCap());
+			//retMap.put("PEG_Ratio", stat.getPeg());
+			//retMap.put("Earnings_Date", sdf.format(stat.getEarningsAnnouncement().getTime()));
+			
+			//StockDividend dividend = stock.getDividend();
+			//retMap.put("Ex_Dividend_Date", sdf.format(dividend.getExDate().getTime()));
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return retMap;
+	}
 	
 	@RequestMapping("/predict")
     public Map<String, Object> predict(Model m, 

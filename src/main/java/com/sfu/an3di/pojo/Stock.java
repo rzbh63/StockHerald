@@ -3,9 +3,9 @@ package com.sfu.an3di.pojo;
 public class Stock {
 	private String id;
 	private String fullName;
-	private Double value;
-	private Double change;
-	private Double net;
+	private Double value = 123.0;
+	private Double change = 0.0;
+	private String net = "0.00%";
 	private String lastUpdateDate;
 	
 	public Stock(String id, String fullName) {
@@ -46,11 +46,11 @@ public class Stock {
 		this.change = change;
 	}
 
-	public Double getNet() {
+	public String getNet() {
 		return net;
 	}
 
-	public void setNet(Double net) {
+	public void setNet(String net) {
 		this.net = net;
 	}
 

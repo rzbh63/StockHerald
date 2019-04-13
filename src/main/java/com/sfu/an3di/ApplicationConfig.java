@@ -16,6 +16,9 @@ public class ApplicationConfig {
 	@Value("${model.script.path}")
 	private String modelScriptPath;
 	
+	@Value("${about.video.url:https://www.youtube.com/embed/x3bDhtuC5yk}")
+	private String aboutVideoUrl;
+	
 	@Value("${unibit.apikey}")
 	private String[] unibitApiKeySet;
 	
@@ -53,6 +56,10 @@ public class ApplicationConfig {
 	
 	public String getModelScriptPath() {
 		return this.modelScriptPath;
+	}
+	
+	public String getAboutVideoUrl() {
+		return this.aboutVideoUrl;
 	}
 	
 	public String[] getUnibitApiKeySet() {

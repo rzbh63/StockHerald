@@ -1,4 +1,5 @@
-[   
+{
+"data": [   
     {
         "company_name": "Alibaba Group",
         "stock_id": "BABA"
@@ -13724,3 +13725,4 @@
         "stock_id": "CZR"
     }
 ]
+}

@@ -54,6 +54,7 @@
               <ul class="site-menu js-clone-nav mr-auto d-none d-lg-block">
                 <li><a href="index">Home</a></li>
                 <li><a href="stock">Stocks</a></li>
+                <li><a href="lda">LDA</a></li>
                 <li class="active"><a href="about">About</a></li>
                 <li><a href="https://medium.com/sfu-big-data/interview-with-big-data-alumni-659373a53ad0" target="_blank">Blog</a></li>
               </ul>
@@ -81,7 +82,7 @@
             <div class="row justify-content-center mb-4">
               <div class="col-md-8 text-center">
                 <h1>About Us</h1>
-                <p class="lead mb-5">We Make Beautiful Things</p>
+                <p class="lead mb-5">SFU Big Data - 2An3Di</p>
               </div>
             </div>
 
@@ -96,18 +97,12 @@
       <div class="container">
         <div class="row">
           
+          <!--*/ 
           <div class="col-md-6 col-sm-12 ml-auto mb-5 order-md-2 order-sm-1" data-aos="zoom-out-up">
           	<div style="margin-top: 7rem">
           		<img src="images/sfu.jpg" alt="Image" class="img-fluid">
 			</div>
           </div>
-          <!--*/ 
-          <div class="col-md-6 col-sm-12 ml-auto mb-5 order-md-2 order-sm-1" data-aos="zoom-out-up">
-          	<div class="embed-responsive embed-responsive-16by9">
-			  <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/x3bDhtuC5yk" allowfullscreen></iframe>
-			</div>
-          </div>
-          */-->
           <div class="col-md-6 col-sm-12 order-md-1 order-sm-2" data-aos="zoom-out-up">
 
             <div class="row">
@@ -138,15 +133,24 @@
               </div>
             </div>
           </div>
+          */-->
           
-        </div>
-      </div>
-    </div>
-    
-    <div class="site-section border-bottom">
-      <div class="container">
-        <div class="row justify-content-center">
-        	<iframe class="embed-responsive-item" th:replace="lda-38.html"></iframe>
+          <div class="col-12" data-aos="zoom-out-up">
+            <div class="row">
+              <div class="col-12">
+                <div class="text-left pb-1 mb-4">
+                  <h2 class="text-black h4 site-section-heading text-center">Introduction Video</h2>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-12 ml-auto mb-5" data-aos="zoom-out-up">
+          	<div class="embed-responsive embed-responsive-16by9">
+			  <iframe class="embed-responsive-item" th:src="@{${videoUrl}}" allowfullscreen></iframe>
+			</div>
+          </div>
+          
         </div>
       </div>
     </div>

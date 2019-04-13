@@ -99,6 +99,7 @@
               <ul class="site-menu js-clone-nav mr-auto d-none d-lg-block">
                 <li class="active"><a href="index">Home</a></li>
                 <li><a href="stock">Stocks</a></li>
+                <li><a href="lda">LDA</a></li>
                 <li><a href="about">About</a></li>
                 <li><a href="https://medium.com/sfu-big-data/interview-with-big-data-alumni-659373a53ad0" target="_blank">Blog</a></li>
               </ul>
@@ -124,7 +125,7 @@
                         
             <div class="row justify-content-center mb-4">
               <div class="col-md-10 text-center">
-                <h1>We Are Herald <span class="typed-words"></span></h1>
+                <h1>We Are Herald <span class="typed-words" id="typedWords1"></span></h1>
                 <p class="lead mb-5"></p>
                 <div><a href="stock" class="btn btn-info btn-md">Predict Now</a></div>
               </div>
@@ -142,7 +143,7 @@
                         
             <div class="row justify-content-center mb-4">
               <div class="col-md-10 text-center">
-                <h1>We Are Herald <span class="typed-words"></span></h1>
+                <h1>We Are Herald <span class="typed-words" id="typedWords2"></span></h1>
                 <p class="lead mb-5"></p>
                 <div><a href="stock" class="btn btn-info btn-md">Predict Now</a></div>
               </div>
@@ -159,24 +160,24 @@
           <div class="col-md-6 col-lg-4" data-aos="fade" data-aos-delay="200">
             <div class="p-3 box-with-humber">
               <div class="number-behind">01.</div>
-              <h2>Our Values</h2>
-              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Et praesentium eos nulla qui commodi consectetur beatae fugiat. Veniam iste rerum perferendis.</p>
+              <h2>Real-time Prediction</h2>
+              <p>Provide real-time prediction from news feeding using our deep learning data science pipeline.</p>
             </div>
           </div>
 
           <div class="col-md-6 col-lg-4" data-aos="fade" data-aos-delay="400">
-            <div class="p-3 box-with-humber">
+          	<div class="p-3 box-with-humber">
               <div class="number-behind">02.</div>
-              <h2>Our Mission</h2>
-              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Et praesentium eos nulla qui commodi consectetur beatae fugiat. Veniam iste rerum perferendis.</p>
+              <h2>Up-To-Date Data</h2>
+              <p>Know about the latest information from our data collection system, which can scrape the latest Nasdaq market information and pull news and twitter data from different APIs.</p>
             </div>
           </div>
 
           <div class="col-md-6 col-lg-4" data-aos="fade" data-aos-delay="600">
             <div class="p-3 box-with-humber">
               <div class="number-behind">03.</div>
-              <h2>Our Philosophy</h2>
-              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Et praesentium eos nulla qui commodi consectetur beatae fugiat. Veniam iste rerum perferendis.</p>
+              <h2>Interactive</h2>
+              <p>Explore the intuitive visualization with our system and discover the underlying topics from our dataset.</p>
             </div>
           </div>
         </div>
@@ -403,7 +404,16 @@
   <script src="js/aos.js"></script>
   <script src="js/typed.js"></script>
             <script>
-            var typed = new Typed('.typed-words', {
+            var typed = new Typed('#typedWords1', {
+                strings: ["of Nasdaq Stock Price"],//," WordPress"," Mobile Apps"],
+                typeSpeed: 80,
+                backSpeed: 80,
+                backDelay: 4000,
+                startDelay: 1000,
+                loop: true,
+                showCursor: true
+                });
+            var typed = new Typed('#typedWords2', {
             strings: ["of Nasdaq Stock Price"],//," WordPress"," Mobile Apps"],
             typeSpeed: 80,
             backSpeed: 80,

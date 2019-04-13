@@ -103,6 +103,7 @@
  		$("#historyFromDate").datepicker('update', aMonthAgo);
  		$("#historyToDate").datepicker('update', today);
  		
+ 		f_getRecentNews();
  		f_createHistoryOHLC();
  		
  		return;
@@ -167,20 +168,22 @@
  		$('#keyStockDataContainer').ploading({action: 'show'});
  		$.ajax({
 			type: 'GET',
-			url: 'https://api.unibit.ai/companyprofile/' + stockId + '?AccessKey=' + unibitApiKey,
+			url: '/stockKeyData?stockId=' + stockId,
+			//url: 'https://api.unibit.ai/companyprofile/' + stockId + '?AccessKey=' + unibitApiKey,
 			dataType: "json",
 			success: function(ret) {
 				if (!!ret) {
 					for (key in ret){
 						$("#keydata_"+key).text(ret[key]);
 					}
-					$("#website").attr("href", ret["website"]);
+					//$("#website").attr("href", ret["website"]);
 					$("#nasdaq_link").attr("href", "https://www.nasdaq.com/symbol/" + stockId + "/real-time");
-					$("#explorer_link").attr("href", "https://www.google.com/search?q=" + ret["company_name"]);
+					$("#explorer_link").attr("href", "https://www.google.com/search?q=" + companyName);
 				}
 			},
 			complete: function (xhr, ts){
-				f_getKeyStockData2();
+				$('#keyStockDataContainer').ploading({action: 'hide'});
+				//f_getKeyStockData2();
 			}
 	    });
  	}
@@ -199,7 +202,6 @@
 			},
 			complete: function (xhr, ts){
 				$('#keyStockDataContainer').ploading({action: 'hide'});
-				f_getRecentNews();
 			}
 	    });
  	}
@@ -539,6 +541,7 @@
               <ul class="site-menu js-clone-nav mr-auto d-none d-lg-block">
                 <li><a href="index">Home</a></li>
                 <li class="active"><a href="stock">Stocks</a></li>
+                <li><a href="lda">LDA</a></li>
                 <li><a href="about">About</a></li>
                 <li><a href="https://medium.com/sfu-big-data/interview-with-big-data-alumni-659373a53ad0" target="_blank">Blog</a></li>
               </ul>
@@ -566,7 +569,7 @@
             <div class="row justify-content-center mb-4">
               <div class="col-md-8 text-center">
                 <h1 th:text="${companyName} + ' (' + ${stockId} + ')'">Apple Inc. (AAPL)</h1>
-                <p class="lead mb-5">Get Some Predictions</p>
+                <p class="lead mb-5">Learn about the stock</p>
               </div>
             </div>
 
@@ -593,11 +596,13 @@
 					</div>
 					<div class="col-12 p-3">
 						<div class="card shadow">
+							<!--/*
 							<div class="m-1">
 								<i class="fas fa-external-link-alt"></i>
 								&nbsp;&nbsp;&nbsp;
 								<a id="website" target="_blank">Website</a>
 							</div>
+							*/-->
 							<div class="m-1">
 								<i class="fas fa-chart-line"></i>
 								&nbsp;&nbsp;&nbsp;
@@ -623,32 +628,24 @@
 								<table class="table table-sm table-borderless align-items-center table-flush table-hover mb-0 table-striped">
 									<tbody>
 										<tr>
-											<th>exchange:</th>
-											<td id="keydata_exchange">Nasdaq Global Select</td>
+											<th>Exchange:</th>
+											<td id="keydata_Exchange">Nasdaq Global Select</td>
 										</tr>
 										<tr>
-											<th>industry:</th>
-											<td id="keydata_industry">Computer Hardware</td>
+											<th>Currency:</th>
+											<td id="keydata_Currency">USD</td>
 										</tr>
 										<tr>
-											<th>sector:</th>
-											<td id="keydata_sector">Technology</td>
+											<th>Price:</th>
+											<td id="keydata_Price">184.85</td>
 										</tr>
 										<tr>
-											<th>open:</th>
-											<td id="keydata_open">184.85</td>
+											<th>Open:</th>
+											<td id="keydata_Open">184.80</td>
 										</tr>
 										<tr>
-											<th>previous_close:</th>
-											<td id="keydata_previous_close">183.73</td>
-										</tr>
-										<tr>
-											<th>market_cap:</th>
-											<td id="keydata_market_cap">881.286B</td>
-										</tr>
-										<tr>
-											<th>forward_dividend_yield:</th>
-											<td id="keydata_forward_dividend_yield">2.92 (1.61%)</td>
+											<th>Previous_Close:</th>
+											<td id="keydata_Previous_Close">183.73</td>
 										</tr>
 		    						</tbody>
 								</table>
@@ -659,32 +656,24 @@
 								<table class="table table-sm table-borderless align-items-center table-flush table-hover mb-0 table-striped">
 									<tbody>
 										<tr>
-											<th>avg_volume:</th>
-											<td id="keydata_avg_volume">34,603,278</td>
+											<th>Ask:</th>
+											<td id="keydata_Ask">185.32</td>
 										</tr>
 										<tr>
-											<th>ex_dividend_date:</th>
-											<td id="keydata_ex_dividend_date">2019-02-08</td>
+											<th>Bid:</th>
+											<td id="keydata_Bid">185.16</td>
 										</tr>
 										<tr>
-											<th>beta:</th>
-											<td id="keydata_beta">0.99</td>
+											<th>AVG_Volume:</th>
+											<td id="keydata_AVG_Volume">34,603,278</td>
 										</tr>
 										<tr>
-											<th>pe_ratio:</th>
-											<td id="keydata_pe_ratio">15.42</td>
+											<th>EPS:</th>
+											<td id="keydata_EPS">12.12</td>
 										</tr>
 										<tr>
-											<th>eps:</th>
-											<td id="keydata_eps">12.12</td>
-										</tr>
-										<tr>
-											<th>week_52_range:</th>
-											<td id="keydata_week_52_range">142.00 - 233.47</td>
-										</tr>
-										<tr>
-											<th>earnings_date:</th>
-											<td id="keydata_earnings_date">Apr 29, 2019 - May 3, 2019</td>
+											<th>PE_Ratio:</th>
+											<td id="keydata_PE_Ratio">15.42</td>
 										</tr>
 		    						</tbody>
 								</table>

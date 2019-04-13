@@ -101,6 +101,7 @@
  		
  		$.getJSON("mockdata/stock-symbol-full.json", function(ret) {
  			var found = false;
+ 			ret = ret.data;
  			for (var i=0; i<ret.length; i++){
  				if (searchStock == ret[i].stock_id){
  					found = true;
@@ -216,8 +217,8 @@
  	}
  	
  	function f_updateStockItem(id, ret){
- 		$("#value_"+id).text(ret[0][1]);
- 		var change = ret[0][1]-ret[1][1];
+ 		$("#value_"+id).text(ret[1][1]);
+ 		var change = ret[1][1]-ret[2][1];
  		$("#change_"+id).text(change.toFixed(2));
  		$("#arrow_"+id).removeClass("fa-arrow-up fa-arrow-down text-success text-danger");
  		if (change > 0) {
@@ -225,7 +226,7 @@
  		} else {
  			$("#arrow_"+id).addClass("fa-arrow-down text-danger");
  		}
- 		var net = change/ret[1][1]*100;
+ 		var net = change/ret[2][1]*100;
  		net = net.toFixed(2);
  		$("#net_"+id).text(net+"%");
  	}
@@ -238,7 +239,7 @@
 		
 		var dataSet = [];
 		var labelSet = [];
-		for (var i=0;i<ret.length;i++){
+		for (var i=1;i<ret.length;i++){
 			dataSet.push(ret[i][1]);
 			labelSet.push(ret[i][0]);
 		}
@@ -311,6 +312,7 @@
               <ul class="site-menu js-clone-nav mr-auto d-none d-lg-block">
                 <li><a href="index">Home</a></li>
                 <li class="active"><a href="stock">Stocks</a></li>
+                <li><a href="lda">LDA</a></li>
                 <li><a href="about">About</a></li>
                 <li><a href="https://medium.com/sfu-big-data/interview-with-big-data-alumni-659373a53ad0" target="_blank">Blog</a></li>
               </ul>
@@ -338,7 +340,7 @@
             <div class="row justify-content-center mb-4">
               <div class="col-md-8 text-center">
                 <h1>Nasdaq Stocks</h1>
-                <p class="lead mb-5">Get Some Predictions</p>
+                <p class="lead mb-5">Learn about the market</p>
               </div>
             </div>
 
@@ -479,7 +481,10 @@
 	                    </th>
 	                    <td th:text="${stock.value}">$4,400 USD</td>
 	                    <td><span th:text="${#numbers.formatDecimal(stock.change, 1, 2)}">42.25</span> <i class="fas mr-3" th:classappend="(${stock.change}>0) ? 'fa-arrow-up text-success' : 'fa-arrow-down text-danger'"></i></td>
-	                    <td th:text="${#numbers.formatDecimal(stock.net, 1, 2)} + '%'">0.33%</td>
+	                    <td th:text="${stock.net}">0.33%</td>
+	                    <!--/*
+	                    	<td th:text="${#numbers.formatDecimal(stock.net, 1, 2)} + '%'">0.33%</td>
+	                    */-->
 	                  </tr>
 	                </tbody>
 	              </table>
